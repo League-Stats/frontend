@@ -105,7 +105,7 @@ class App extends React.Component {
   }
 
   render(){
-    console.log(this.state.history)
+    // console.log(this.state.history)
     return (
       <div className="App">
         <section className="section-left">
@@ -125,7 +125,7 @@ class App extends React.Component {
             />
           </div>
           <Route path="/history">
-            <History data={this.state.history} showGames={this.state.showGames} currentRegion={this.state.current}/>
+            <History name={this.state.summoner.name} data={this.state.history} showGames={this.state.showGames} currentRegion={this.state.current}/>
           </Route>
           <Route exact path="/">
             <RankContainer rank={this.state.rank}/>

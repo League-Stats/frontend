@@ -6,7 +6,7 @@ const History = (props) => {
     return(
         <div>
             {props.data.slice(0, props.showGames).map(game => {
-                return <Match data={game} currentRegion={props.currentRegion}/>
+                return <Match name={props.name} data={game} currentRegion={props.currentRegion}/>
             })}
         </div>
     )
