@@ -1,5 +1,5 @@
 import React from 'react';
-import './css/Rank.css'
+import './sass/Rank.sass'
 const Rank = ({ rank }) => {
     
     return (

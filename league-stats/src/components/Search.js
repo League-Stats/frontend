@@ -1,7 +1,7 @@
 import React from 'react';
 import Region from './Region';
-import '../components/css/App.css'
-import './css/Search.css'
+import './sass/App.sass'
+import './sass/Search.sass'
 
 const Search = (props) => {
     return (

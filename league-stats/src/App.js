@@ -1,9 +1,13 @@
 import React from 'react';
-import '../src/components/css/App.css';
+import '../src/components/sass/App.sass';
 import axios from 'axios';
+import { Route, Link } from 'react-router-dom';
 import Search from './components/Search';
-import Rank from './components/Rank';
 import Info from './components/Info';
+import History from './components/History';
+import RankContainer from './components/RankContainer';
+
+// TODO: FIX UNRANKED EMBLEM
 
 class App extends React.Component {
   constructor(props){
@@ -89,8 +93,8 @@ class App extends React.Component {
         </section>
         <section className="section-right">
           <div className="nav">
-            <a className="nav-link">PROFILE</a>
-            <a className="nav-link">MATCH HISTORY</a>
+            <Link to="/" className="nav-link">PROFILE</Link>
+            <Link to="/history" className="nav-link">MATCH HISTORY</Link>
             <Search
               value={this.state.value}
               handleChanges={this.handleChanges}
@@ -100,9 +104,10 @@ class App extends React.Component {
               regionChange={this.regionChange}
             />
           </div>
-          <div className="section-rank">
-            {this.state.rank.map(rank => {return <Rank rank={rank} key={rank.queueType}/>})}
-          </div>
+          <Route path="/history" component={History}/>
+          <Route exact path="/">
+            <RankContainer rank={this.state.rank}/>
+          </Route>
         </section>
       </div>
     );

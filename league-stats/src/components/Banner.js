@@ -1,5 +1,5 @@
 import React from 'react';
-import './css/Banner.css';
+import './sass/Banner.sass';
 import axios from 'axios';
 
 let patch = '10.3.1';

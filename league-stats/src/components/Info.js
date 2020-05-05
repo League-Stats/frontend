@@ -1,5 +1,5 @@
 import React from 'react';
-import './css/Info.css'
+import './sass/Info.sass'
 import Banner from './Banner.js'
 
 const Info = (props) => {

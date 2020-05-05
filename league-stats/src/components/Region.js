@@ -1,5 +1,5 @@
 import React from 'react';
-import './css/Search.css';
+import './sass/Search.sass';
 
 const Region = (props) => {
     return(
