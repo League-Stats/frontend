@@ -20,6 +20,8 @@ class App extends React.Component {
         level: 30,
       },
       rank: [],
+      history: [],
+      showGames: 10,
       current: "NA",
       regions: [
           { id: 0, locale: 'NA' },
@@ -78,14 +80,32 @@ class App extends React.Component {
       })
 
     this.setState({ value: ''})
+
+    axios.request({
+      method: 'POST',
+      url: `https://hextechgg.herokuapp.com/api/summoner/matchhistory/`,
+      data: {
+        summonerName: this.state.value,
+        summonerRegion: this.state.current
+      },
+    })
+      .then(res => {
+        this.setState({
+          history: res.data
+        })
+      })
+      .catch(error => {
+        console.log(error)
+      })
   }
+
 
   regionChange = e => {
     this.setState({ current: e.target.value})
   }
 
   render(){
-    console.log(this.state.rank)
+    console.log(this.state.history)
     return (
       <div className="App">
         <section className="section-left">
@@ -104,7 +124,9 @@ class App extends React.Component {
               regionChange={this.regionChange}
             />
           </div>
-          <Route path="/history" component={History}/>
+          <Route path="/history">
+            <History data={this.state.history} showGames={this.state.showGames} currentRegion={this.state.current}/>
+          </Route>
           <Route exact path="/">
             <RankContainer rank={this.state.rank}/>
           </Route>

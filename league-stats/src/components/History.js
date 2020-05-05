@@ -1,10 +1,13 @@
 import React from 'react';
+import Match from './Match';
 import './sass/History.sass'
 
-const History = () => {
+const History = (props) => {
     return(
         <div>
-            <img className="mh" alt="mh test" src={require(`../images/mh.png`)} />
+            {props.data.slice(0, props.showGames).map(game => {
+                return <Match data={game} currentRegion={props.currentRegion}/>
+            })}
         </div>
     )
 }
