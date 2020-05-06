@@ -14,7 +14,7 @@ class Match extends React.Component {
             result: null,
         }
     }
-
+    
     async componentDidMount(){
         await axios.request({
             method: 'POST',
@@ -34,40 +34,41 @@ class Match extends React.Component {
               console.log(error)
             })
 
-            if(this.state.matchDetails.participantIdentities){
-                let getPlayer = this.state.matchDetails.participantIdentities.find(player => player.player.summonerName === this.state.name);
-                let playerNumber = getPlayer.participantId
-                if(playerNumber > 0){
-                    this.setState({
-                        team: 0
-                    })
-                } else if(playerNumber) {
-                    this.setState({
-                        team: 1
-                    })
-                }
-            }
+    //         console.log(this.state.matchDetails)
 
-            if(this.state.matchDetails.teams){
-                // console.log(this.state.matchDetails.teams[0].win)
-                let firstTeamResult = this.state.matchDetails.teams[0].win
-                if(firstTeamResult === "Win" && this.state.team === 0){
-                    this.setState({
-                        result: true
-                    })
-                } else {
-                    this.setState({
-                        result: false
-                    })
-                }
-            }
+    //     if(this.state.matchDetails.participantIdentities){
+    //         let getPlayer = this.state.matchDetails.participantIdentities.find(player => player.player.summonerName === this.state.name);
+    //         let playerNumber = getPlayer.participantId
+    //         if(playerNumber < 6){
+    //             this.setState({
+    //                 team: 0
+    //             })
+    //         } else if(playerNumber > 5) {
+    //             this.setState({
+    //                 team: 1
+    //             })
+    //         }
+    //     }
+
+    //     if(this.state.matchDetails.teams){
+    //         // console.log(this.state.matchDetails.teams[0].win)
+    //         let firstTeamResult = this.state.matchDetails.teams
+    //         // if(firstTeamResult === "Win" && this.state.team === 0){
+    //         //     this.setState({
+    //         //         result: true
+    //         //     })
+    //         // } else {
+    //         //     this.setState({
+    //         //         result: false
+    //         //     })
+    //         // }
+    //     }
     }
 
     render(){
 
+        // console.log(this.state.data.gameId)
 
-        console.log(this.state.result)
-        
         // let id = 0;
             
         // this.state.matchDetails.participantIdentities.player.find((player) => {
@@ -77,6 +78,8 @@ class Match extends React.Component {
         // });
 
         // console.log(id)
+
+        console.log("render", this.state.data)
 
         return(
             <div>

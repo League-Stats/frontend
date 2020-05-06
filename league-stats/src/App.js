@@ -92,7 +92,7 @@ class App extends React.Component {
       .then(res => {
         this.setState({
           history: res.data
-        })
+        }) 
       })
       .catch(error => {
         console.log(error)
@@ -105,7 +105,6 @@ class App extends React.Component {
   }
 
   render(){
-    // console.log(this.state.history)
     return (
       <div className="App">
         <section className="section-left">
@@ -125,7 +124,7 @@ class App extends React.Component {
             />
           </div>
           <Route path="/history">
-            <History name={this.state.summoner.name} data={this.state.history} showGames={this.state.showGames} currentRegion={this.state.current}/>
+            <History name={this.state.summoner.name} history={this.state.history} showGames={this.state.showGames} currentRegion={this.state.current}/>
           </Route>
           <Route exact path="/">
             <RankContainer rank={this.state.rank}/>
