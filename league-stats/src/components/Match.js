@@ -15,8 +15,9 @@ class Match extends React.Component {
         }
     }
     
-    async componentDidMount(){
-        await axios.request({
+    componentDidMount(){
+          // console.log("BEFORE", this.state.data)
+        axios.request({
             method: 'POST',
             url: `https://hextechgg.herokuapp.com/api/summoner/matchdetails/`,
             data: {
@@ -25,16 +26,18 @@ class Match extends React.Component {
             },
           })
             .then(res => {
+              console.log(res.data)
               this.setState({
-                matchDetails: res.data
+                matchDetails: [...this.state.matchDetails, res.data]
               })
 
             })
             .catch(error => {
               console.log(error)
             })
+            console.log("AFTER", this.state.data)
 
-    //         console.log(this.state.matchDetails)
+            console.log(this.state.matchDetails)
 
     //     if(this.state.matchDetails.participantIdentities){
     //         let getPlayer = this.state.matchDetails.participantIdentities.find(player => player.player.summonerName === this.state.name);
@@ -79,7 +82,7 @@ class Match extends React.Component {
 
         // console.log(id)
 
-        console.log("render", this.state.data)
+        // console.log("render", this.state.data)
 
         return(
             <div>
