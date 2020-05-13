@@ -1,0 +1,45 @@
+.accordion-container
+  display: flex
+  flex-direction: column
+
+.accordion-win
+  background-color: #779ecb
+  cursor: pointer
+  padding: 18px
+  margin-top: 10px
+  display: flex
+  align-items: center
+  border: 1px solid black
+  outline: none
+  transition: background-color 0.6s ease
+
+.accordion-loss
+  background-color: #f3a6b0
+  cursor: pointer
+  padding: 18px
+  margin-top: 10px
+  display: flex
+  align-items: center
+  border: 0.5px solid black
+  outline: none
+  transition: background-color 0.6s ease
+
+.chevron
+  margin-left: auto
+  transition: transform 0.6s ease
+
+.rotate
+  transform: rotate(90deg)
+
+.accordion-inner-win
+  background-color: #779ecb
+  overflow: auto
+  transition: max-height 0.6s ease
+
+.accordion-inner-loss
+  background-color: #f3a6b0
+  overflow: auto
+  transition: max-height 0.6s ease
+
+.inner-content
+  padding: 18px

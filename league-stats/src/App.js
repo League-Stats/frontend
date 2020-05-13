@@ -123,12 +123,16 @@ class App extends React.Component {
               regionChange={this.regionChange}
             />
           </div>
-          <Route path="/history">
-            <History name={this.state.summoner.name} history={this.state.history} showGames={this.state.showGames} currentRegion={this.state.current}/>
-          </Route>
-          <Route exact path="/">
-            <RankContainer rank={this.state.rank}/>
-          </Route>
+          <div className="match-history">
+            <Route path="/history">
+              <History name={this.state.summoner.name} history={this.state.history} showGames={this.state.showGames} currentRegion={this.state.current}/>
+            </Route>
+          </div>
+          <div className="rank-display">
+            <Route exact path="/">
+              <RankContainer rank={this.state.rank}/>
+            </Route>
+          </div>
         </section>
       </div>
     );

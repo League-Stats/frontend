@@ -1,4 +1,5 @@
 import React from 'react';
+import Accordion from './Accordion';
 import './sass/Match.sass'
 
 const Match = (props) => {
@@ -14,8 +15,8 @@ const Match = (props) => {
   console.log(props.matchDetails)
 
   return(
-    <div className={`${playerWinCheck ? "winColor" : "loseColor"}`}>
-      STATUS
+    <div>
+      <Accordion content={`${playerWinCheck ? "Win" : "Loss"}`} playerWin={playerWinCheck} />
     </div>
   )
 }
