@@ -25,26 +25,22 @@ class History extends React.Component {
         })
 
         const matchDetails = await Promise.all(matchPromises);
-        console.log(matchDetails);
+        const sortDetails = matchDetails.sort((a, b) => b.data.gameCreation - a.data.gameCreation)
+
+        this.setState({
+            matchDetails: sortDetails
+        })
     }
 
     render(){
         return(
-            <div>hi</div>
+            <div>
+                {this.state.matchDetails.map(game => {
+                    return <Match matchDetails={game.data} name={this.props.name} key={game.data.gameCreation}/>
+                })}
+            </div>
         )
     }
 }
-
-// const History = (props) => {
-    
-
-//     return(
-//         <div>
-//             {props.history.slice(0, props.showGames).map(game => {
-//                 return <Match name={props.name} data={game} currentRegion={props.currentRegion}/>
-//             })}
-//         </div>
-//     )
-// }
 
 export default History;
