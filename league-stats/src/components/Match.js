@@ -16,7 +16,7 @@ const Match = (props) => {
 
   return(
     <div>
-      <Accordion content={`${playerWinCheck ? "Win" : "Loss"}`} playerWin={playerWinCheck} />
+      <Accordion preview={props.matchDetails} content={`${playerWinCheck ? "Win" : "Loss"}`} playerWin={playerWinCheck} />
     </div>
   )
 }
