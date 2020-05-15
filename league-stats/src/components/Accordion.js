@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
 
 import "../components/sass/Accordion.sass";
 
@@ -44,31 +44,47 @@ function Accordion(props) {
   //   }
   // }
 
-  async function getGameMode(queueId){
-    await axios.request({
-      method: 'GET',
-      url: "https://static.developer.riotgames.com/docs/lol/queues.json"
-    })
-    .then(res => {
-      return res.data
-    })
-    .then((res) =>{
-      const test = res.find(mode => mode.queueId === queueId).description.slice(0, -6)
-      return test.toString()
-    })
-    .catch(error => {
-      console.log(error)
-    })
-  }
+  // async function getGameMode(queueId){
+  //   await axios.request({
+  //     method: 'GET',
+  //     url: "https://static.developer.riotgames.com/docs/lol/queues.json"
+  //   })
+  //   .then(res => {
+  //     return res.data
+  //   })
+  //   .then((res) =>{
+  //     const test = res.find(mode => mode.queueId === queueId).description.slice(0, -6)
+  //     return test.toString()
+  //   })
+  //   .catch(error => {
+  //     console.log(error)
+  //   })
+  // }
 
   const gameTime = gameTimeConversion(m.gameDuration)
-  const gameMode = getGameMode(m.queueId);
+  // const gameMode = getGameMode(m.queueId);
+
+  const getPlayersNames = m.participantIdentities.map(player => {
+    return <li className="playersTeamList">{player.player.summonerName}</li>
+  })
+
+  const playersFirstTeam = getPlayersNames.slice(0, 5)
+  const playersSecondTeam = getPlayersNames.slice(5, 10)
 
   return (
     <div className="accordion-container">
       <button className={`${props.playerWin ? "accordion-win" : "accordion-loss"} ${setActive}`} onClick={toggleAccordion}>
         {gameTime}
-        {gameMode}
+        {/* {gameMode} */}
+
+        <ul>
+          {playersFirstTeam}
+        </ul>
+        <ul>
+          {playersSecondTeam}
+        </ul>
+
+        {console.log(m)}
         <i className={`fas fa-chevron-right ${setRotate}`} />
       </button>
       <div
