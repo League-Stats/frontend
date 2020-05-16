@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-// import axios from 'axios';
+import axios from 'axios';
 
 import "../components/sass/Accordion.sass";
 
@@ -33,7 +33,7 @@ function Accordion(props) {
 
   // async function getGameMode(queueId){
   //   try{
-  //     const res = await axios.request({
+  //     const res = await Axios.request({
   //       method: 'GET',
   //       url: "https://static.developer.riotgames.com/docs/lol/queues.json"
   //     })
@@ -64,12 +64,23 @@ function Accordion(props) {
   const gameTime = gameTimeConversion(m.gameDuration)
   // const gameMode = getGameMode(m.queueId);
 
-  const getPlayersNames = m.participantIdentities.map(player => {
-    return <li className="playersTeamList">{player.player.summonerName}</li>
+  const getPlayersNames = m.participantsInfo.map(player => {
+    axios.get(`http://ddragon.leagueoflegends.com/cdn/${props.patch}/data/en_US/champion.json`)
+    .then((res) => {
+      return res.data
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+    // return <li className="playersTeamList">{player.championId} {player.player.summonerName}</li>
   })
+
+  console.log(getPlayersNames)
 
   const playersFirstTeam = getPlayersNames.slice(0, 5)
   const playersSecondTeam = getPlayersNames.slice(5, 10)
+
+  // const playerChampion = m.participants.map
 
   return (
     <div className="accordion-container">
@@ -83,8 +94,6 @@ function Accordion(props) {
         <ul>
           {playersSecondTeam}
         </ul>
-
-        {console.log(m)}
         <i className={`fas fa-chevron-right ${setRotate}`} />
       </button>
       <div

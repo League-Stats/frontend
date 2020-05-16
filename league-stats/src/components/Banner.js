@@ -1,13 +1,5 @@
 import React from 'react';
 import './sass/Banner.sass';
-import axios from 'axios';
-
-let patch = '10.3.1';
-
-axios.get('https://ddragon.leagueoflegends.com/api/versions.json')
-.then((res) => {
-    patch = res.data.shift()
-})
 
 const getLevelBorder = (lvl) => {
     let border = 30;
@@ -34,11 +26,12 @@ const getLevelBorder = (lvl) => {
     return border
 }
 
-const Banner = ({ info }) => {
+const Banner = (props) => {
+    let { info } = props
     return(
         <div className="banner">
             <h1 className="smnr-name">{info.name}</h1>
-            <img alt="player-icon" className="icon" src={`https://ddragon.leagueoflegends.com/cdn/${patch}/img/profileicon/${info.icon}.png`}/>
+            <img alt="player-icon" className="icon" src={`https://ddragon.leagueoflegends.com/cdn/${props.patch}/img/profileicon/${info.icon}.png`}/>
             <img alt="player-level-border" className="border" src={require(`../images/lvl/lvl${getLevelBorder(info.level)}.png`)}/>
             <p className="number">{info.level}</p>
         </div>

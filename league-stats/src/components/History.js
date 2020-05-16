@@ -36,7 +36,12 @@ class History extends React.Component {
         return(
             <div>
                 {this.state.matchDetails.map(game => {
-                    return <Match matchDetails={game.data} name={this.props.name} key={game.data.gameCreation}/>
+                    return <Match
+                                matchDetails={game.data}
+                                name={this.props.name}
+                                key={game.data.gameCreation}
+                                patch={this.props.patch}
+                            />
                 })}
             </div>
         )

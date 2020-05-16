@@ -5,7 +5,7 @@ import Banner from './Banner.js'
 const Info = (props) => {
     return (
         <div className="info">
-            <Banner info={props.info} />
+            <Banner info={props.info} patch={props.patch} />
         </div>
     )
 }

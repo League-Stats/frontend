@@ -22,6 +22,7 @@ class App extends React.Component {
       rank: [],
       history: [],
       showGames: 10,
+      patch: "10.10.3208608",
       current: "NA",
       regions: [
           { id: 0, locale: 'NA' },
@@ -97,6 +98,13 @@ class App extends React.Component {
       .catch(error => {
         console.log(error)
       })
+
+    axios.get('https://ddragon.leagueoflegends.com/api/versions.json')
+    .then((res) => {
+      this.setState({
+        patch: res.data.shift()
+      })
+    })
   }
 
 
@@ -108,7 +116,7 @@ class App extends React.Component {
     return (
       <div className="App">
         <section className="section-left">
-          <Info info={this.state.summoner} />
+          <Info info={this.state.summoner} patch={this.state.patch} />
         </section>
         <section className="section-right">
           <div className="nav">
@@ -125,7 +133,13 @@ class App extends React.Component {
           </div>
           <div className="match-history">
             <Route path="/history">
-              <History name={this.state.summoner.name} history={this.state.history} showGames={this.state.showGames} currentRegion={this.state.current}/>
+              <History
+                name={this.state.summoner.name}
+                history={this.state.history}
+                showGames={this.state.showGames}
+                currentRegion={this.state.current}
+                patch={this.state.patch}
+              />
             </Route>
           </div>
           <div className="rank-display">
