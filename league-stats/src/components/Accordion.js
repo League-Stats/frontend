@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 
 import "../components/sass/Accordion.sass";
@@ -7,7 +7,37 @@ function Accordion(props) {
   const [setActive, setActiveState] = useState("");
   const [setHeight, setHeightState] = useState("0px");
   const [setRotate, setRotateState] = useState("chevron");
+  const [gameModeData, setGameModeData] = useState([]);
+  const [playersNames, setPlayersNames] = useState([]);
   const m = props.preview
+
+  const getGameModeData = async () => {
+    const result = await axios(
+      "https://static.developer.riotgames.com/docs/lol/queues.json",
+    );
+    setGameModeData(result.data.find(mode => mode.queueId === m.queueId).description.slice(0, -6))
+  }
+  
+  const getPlayersNames = async () => {
+    const result = await axios(
+      `http://ddragon.leagueoflegends.com/cdn/${props.patch}/data/en_US/champion.json`
+    )
+    const champs = Object.values(result.data.data)
+    const playerChamps = m.participantsInfo.map(player => {
+      let champName = champs.find(champ => champ.key == player.championId).id
+      return <div className="player-pick">
+        <img className="champIcon" src={`http://ddragon.leagueoflegends.com/cdn/${props.patch}/img/champion/${champName}.png`}/>
+        {player.player.summonerName}
+      </div>
+    })
+    setPlayersNames(playerChamps)
+  }
+
+  useEffect(() => {
+    getGameModeData();
+    getPlayersNames();
+    // getChampionsList();
+  }, [])
 
   const content = useRef(null);
 
@@ -31,69 +61,29 @@ function Accordion(props) {
     return showHours + showMinutes + showSeconds
   }
 
-  // async function getGameMode(queueId){
-  //   try{
-  //     const res = await Axios.request({
-  //       method: 'GET',
-  //       url: "https://static.developer.riotgames.com/docs/lol/queues.json"
-  //     })
-  //     const data = res.data.find(mode => mode.queueId === queueId).description.slice(0, -6);
-  //     return data
-  //   } catch(error) {
-  //     console.log(error);
-  //   }
-  // }
-
-  // async function getGameMode(queueId){
-  //   await axios.request({
-  //     method: 'GET',
-  //     url: "https://static.developer.riotgames.com/docs/lol/queues.json"
-  //   })
-  //   .then(res => {
-  //     return res.data
-  //   })
-  //   .then((res) =>{
-  //     const test = res.find(mode => mode.queueId === queueId).description.slice(0, -6)
-  //     return test.toString()
-  //   })
-  //   .catch(error => {
-  //     console.log(error)
-  //   })
-  // }
+  function convertGameMode(mode){
+    if(mode == "5v5 Ranked Solo"){
+      return "Ranked Solo" 
+    } else if(mode == "5v5 ARAM"){
+      return "ARAM"
+    } else {
+      return mode
+    }
+  }
 
   const gameTime = gameTimeConversion(m.gameDuration)
-  // const gameMode = getGameMode(m.queueId);
-
-  const getPlayersNames = m.participantsInfo.map(player => {
-    axios.get(`http://ddragon.leagueoflegends.com/cdn/${props.patch}/data/en_US/champion.json`)
-    .then((res) => {
-      return res.data
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-    // return <li className="playersTeamList">{player.championId} {player.player.summonerName}</li>
-  })
-
-  console.log(getPlayersNames)
-
-  const playersFirstTeam = getPlayersNames.slice(0, 5)
-  const playersSecondTeam = getPlayersNames.slice(5, 10)
-
-  // const playerChampion = m.participants.map
+  const firstTeam = playersNames.slice(0, 5)
+  const secondTeam = playersNames.slice(5, 10)
 
   return (
     <div className="accordion-container">
       <button className={`${props.playerWin ? "accordion-win" : "accordion-loss"} ${setActive}`} onClick={toggleAccordion}>
-        {gameTime}
-        {/* {gameMode} */}
-
-        <ul>
-          {playersFirstTeam}
-        </ul>
-        <ul>
-          {playersSecondTeam}
-        </ul>
+        <div className="game-type">
+          <div>{gameTime}</div>
+          <div>{convertGameMode(gameModeData)}</div>
+        </div>
+        <div className="teams">{firstTeam}</div>
+        <div className="teams">{secondTeam}</div>
         <i className={`fas fa-chevron-right ${setRotate}`} />
       </button>
       <div
