@@ -20,6 +20,7 @@ const Match = (props) => {
         content={`${playerWinCheck ? "Win" : "Loss"}`}
         playerWin={playerWinCheck}
         patch={props.patch}
+        playerId={getParticipantId}
       />
     </div>
   )
