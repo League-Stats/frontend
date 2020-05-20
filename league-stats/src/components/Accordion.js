@@ -24,19 +24,18 @@ function Accordion(props) {
     )
     const champs = Object.values(result.data.data)
     const playerChamps = m.participantsInfo.map(player => {
-      let champName = champs.find(champ => champ.key == player.championId).id
-      return <div className="player-pick">
-        <img className="champIcon" src={`http://ddragon.leagueoflegends.com/cdn/${props.patch}/img/champion/${champName}.png`}/>
+      let champName = champs.find(champ => Number(champ.key) === player.championId).id
+      return <div className="player-pick" key={player.player.summonerName}>
+        <img className="champIcon" alt="champion-icon" src={`http://ddragon.leagueoflegends.com/cdn/${props.patch}/img/champion/${champName}.png`}/>
         {player.player.summonerName}
       </div>
     })
     setPlayersNames(playerChamps)
   }
 
-  useEffect(() => {
+  useEffect((props, m) => {
     getGameModeData();
     getPlayersNames();
-    // getChampionsList();
   }, [])
 
   const content = useRef(null);
@@ -62,9 +61,9 @@ function Accordion(props) {
   }
 
   function convertGameMode(mode){
-    if(mode == "5v5 Ranked Solo"){
+    if(mode === "5v5 Ranked Solo"){
       return "Ranked Solo" 
-    } else if(mode == "5v5 ARAM"){
+    } else if(mode === "5v5 ARAM"){
       return "ARAM"
     } else {
       return mode
