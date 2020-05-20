@@ -132,13 +132,14 @@ class App extends React.Component {
             />
           </div>
           <div className="match-history">
-            <Route path="/history">
+            <Route path={`/history/`}>
               <History
                 name={this.state.summoner.name}
                 history={this.state.history}
                 showGames={this.state.showGames}
                 currentRegion={this.state.current}
                 patch={this.state.patch}
+                handleSubmit={this.handleSubmit}
               />
             </Route>
           </div>

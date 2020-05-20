@@ -1,5 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import {
+  baron1,
+  baron2,
+  dragon1,
+  dragon2,
+  herald1,
+  herald2,
+  inhib1,
+  inhib2,
+  tower1,
+  tower2,
+} from '../images/objectives'
 
 import "../components/sass/Accordion.sass";
 
@@ -10,6 +22,8 @@ function Accordion(props) {
   const [gameModeData, setGameModeData] = useState([]);
   const [playersNames, setPlayersNames] = useState([]);
   const m = props.preview
+
+  console.log(m)
 
   const getGameModeData = async () => {
     const result = await axios(
@@ -27,7 +41,7 @@ function Accordion(props) {
       let champName = champs.find(champ => Number(champ.key) === player.championId).id
       return <div className="player-pick" key={player.player.summonerName}>
         <img className="champIcon" alt="champion-icon" src={`http://ddragon.leagueoflegends.com/cdn/${props.patch}/img/champion/${champName}.png`}/>
-        {player.player.summonerName}
+        <div className="player-names">{player.player.summonerName}</div>
       </div>
     })
     setPlayersNames(playerChamps)
@@ -81,8 +95,52 @@ function Accordion(props) {
           <div>{gameTime}</div>
           <div>{convertGameMode(gameModeData)}</div>
         </div>
+          <div className="objectives-container">
+            <div className="objective">  
+              <img src={baron1} className="objectives-icon" alt="baron-icon"/>
+              <p>{m.teams[0].baronKills}</p>
+            </div>
+            <div className="objective">  
+              <img src={dragon1} className="objectives-icon" alt="dragon-icon"/>
+              <p>{m.teams[0].dragonKills}</p>
+            </div>
+            <div className="objective">  
+              <img src={inhib1} className="objectives-icon" alt="inhib-icon"/>
+              <p>{m.teams[0].inhibitorKills}</p>
+            </div>
+            <div className="objective">  
+              <img src={herald1} className="objectives-icon" alt="herald-icon"/>
+              <p>{m.teams[0].riftHeraldKills}</p>
+            </div>
+            <div className="objective">  
+              <img src={tower1} className="objectives-icon" alt="tower-icon"/>
+              <p>{m.teams[0].towerKills}</p>
+            </div>
+          </div>
         <div className="teams">{firstTeam}</div>
         <div className="teams">{secondTeam}</div>
+          <div className="objectives-container">
+            <div className="objective">  
+              <img src={baron2} className="objectives-icon" alt="baron-icon"/>
+              <p>{m.teams[1].baronKills}</p>
+            </div>
+            <div className="objective">  
+              <img src={dragon2} className="objectives-icon" alt="dragon-icon"/>
+              <p>{m.teams[1].dragonKills}</p>
+            </div>
+            <div className="objective">  
+              <img src={inhib2} className="objectives-icon" alt="inhib-icon"/>
+              <p>{m.teams[1].inhibitorKills}</p>
+            </div>
+            <div className="objective">  
+              <img src={herald2} className="objectives-icon" alt="herald-icon"/>
+              <p>{m.teams[1].riftHeraldKills}</p>
+            </div>
+            <div className="objective">  
+              <img src={tower2} className="objectives-icon" alt="tower-icon"/>
+              <p>{m.teams[1].towerKills}</p>
+            </div>
+          </div>
         <i className={`fas fa-chevron-right ${setRotate}`} />
       </button>
       <div
