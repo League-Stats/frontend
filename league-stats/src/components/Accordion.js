@@ -24,7 +24,7 @@ function Accordion(props) {
   const [playerSetup, setPlayerSetup] = useState([]);
   const m = props.preview
 
-  // console.log(m)
+  console.log(m)
 
   const getGameModeData = async () => {
     const result = await axios(
@@ -118,20 +118,61 @@ function Accordion(props) {
     }
   }
 
+const toTimeAgo = (timestamp) => {
+  console.log(timestamp)
+  const timeAgo = Number(new Date()) - timestamp;
+  const minute = 60000;
+  const hour = minute * 60;
+  const day = hour * 24;
+  const month = day * 30;
+  const year = day * 365;
+  switch (true) {
+    case timeAgo < minute:
+      const seconds = Math.round(timeAgo / 1000);
+      return `${seconds} ${seconds > 1 ? 'seconds' : 'second'} ago`
+    case timeAgo < hour:
+    console.log(timeAgo)
+      const minutes = Math.round(timeAgo / minute);
+      return  `${minutes} ${minutes > 1 ? 'minutes' : 'minute'} ago`
+    case timeAgo < day:
+      const hours = Math.round(timeAgo / hour);
+      return `${hours} ${hours > 1 ? 'hours' : 'hour'} ago`
+    case timeAgo < month:
+      const days = Math.round(timeAgo / day);
+      return `${days} ${days > 1 ? 'days' : 'day'} ago`
+    case timeAgo < year:
+      const months = Math.round(timeAgo / month);
+      return `${months} ${months > 1 ? 'months' : 'month'} ago`
+    case timeAgo > year:
+      const years = Math.round(timeAgo / year);
+      return `${years} ${years > 1 ? 'years' : 'year'} ago`
+    default:
+      return "";
+  }
+};
+  // function getPlayerKda(){
+  //   const getKda = m.participantsInfo.map(player => {
+  //     return `${player.stats.kills}/${player.stats.deaths}/${player.stats.assists}`
+  //   })
+  //   return getKda
+  // }
+
   const gameTime = gameTimeConversion(m.gameDuration)
   const firstTeam = playersNames.slice(0, 5)
   const secondTeam = playersNames.slice(5, 10)
-  const currPlayerStats = m.participantsInfo.find(player => player.participantId === props.playerId)
+  const getTimeAgo = toTimeAgo(m.gameCreation)
 
   return (
     <div className="accordion-container">
       <button className={`${props.playerWin ? "accordion-win" : "accordion-loss"} ${setActive}`} onClick={toggleAccordion}>
+        <div className="game-type">
+          <div>{convertGameMode(gameModeData)}</div>
+          {getTimeAgo}
+          {props.playerWin ? "VICTORY" : "DEFEAT"}
+          <div>{gameTime}</div>
+        </div>
         <div className="player-stats">
           {playerSetup}
-        </div>
-        <div className="game-type">
-          <div>{gameTime}</div>
-          <div>{convertGameMode(gameModeData)}</div>
         </div>
           <div className="objectives-container">
             <div className="objective">  
@@ -179,6 +220,9 @@ function Accordion(props) {
               <p>{m.teams[1].towerKills}</p>
             </div>
           </div>
+          {/* <div>
+            {getPlayerKda()}
+          </div> */}
         <i className={`fas fa-chevron-right ${setRotate}`} />
       </button>
       <div
