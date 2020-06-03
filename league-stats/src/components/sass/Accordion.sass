@@ -24,6 +24,17 @@
   outline: none
   transition: background-color 0.6s ease
 
+.accordion-remake
+  background-color: #414149
+  cursor: pointer
+  padding: 18px
+  margin-top: 10px
+  display: flex
+  align-items: center
+  border: 1px solid black
+  outline: none
+  transition: background-color 0.6s ease
+
 .chevron
   margin-left: auto
   transition: transform 0.6s ease
@@ -31,13 +42,18 @@
 .rotate
   transform: rotate(90deg)
 
-.accordion-inner-win
+.accordion-win-inner
   background-color: #4F6087
   overflow: auto
   transition: max-height 0.6s ease
 
-.accordion-inner-loss
+.accordion-loss-inner
   background-color: #874F4F
+  overflow: auto
+  transition: max-height 0.6s ease
+
+.accordion-remake-inner
+  background-color: #414149
   overflow: auto
   transition: max-height 0.6s ease
 
@@ -153,6 +169,10 @@
 
 .result-defeat
   color: #ff4e50
+  font-weight: bold
+
+.result-remake
+  color: black
   font-weight: bold
 
 .game-time

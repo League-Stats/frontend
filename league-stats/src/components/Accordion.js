@@ -163,7 +163,6 @@ function Accordion(props) {
     const showHours = hours > 0 ? hours + "h " : "";
     const showMinutes = minutes > 0 ? minutes + "m " : "";
     const showSeconds = seconds > 0 ? seconds + "s" : "";
-
     return showHours + showMinutes + showSeconds
   }
 
@@ -214,6 +213,26 @@ const toTimeAgo = (timestamp) => {
   //   return getKda
   // }
 
+  const gameResult = (time) => {
+    if(time < 500){
+      return <div className={"result-remake"}>REMAKE</div>
+    } else if(props.playerWin === true){
+      return <div className={"result-victory"}>VICTORY</div>
+    } else {
+      return <div className={"result-defeat"}>DEFEAT</div>
+    }
+  }
+
+  const accordionResult = (time) => {
+    if(time < 500){
+      return "accordion-remake"
+    } else if (props.playerWin){
+      return "accordion-win"
+    } else {
+      return "accordion-loss"
+    }
+  }
+
   const gameTime = gameTimeConversion(m.gameDuration)
   const firstTeam = playerNameAndChamp.slice(0, 5)
   const secondTeam = playerNameAndChamp.slice(5, 10)
@@ -221,11 +240,11 @@ const toTimeAgo = (timestamp) => {
 
   return (
     <div className="accordion-container">
-      <button className={`${props.playerWin ? "accordion-win" : "accordion-loss"} ${setActive}`} onClick={toggleAccordion}>
+      <button className={`${accordionResult(m.gameDuration)} ${setActive}`} onClick={toggleAccordion}>
         <div className="game-type">
           <div className="game-mode">{convertGameMode(gameModeData)}</div>
           <div className="time-ago">{getTimeAgo}</div>
-          <div className={props.playerWin ? "result-victory" : "result-defeat"}>{props.playerWin ? "VICTORY" : "DEFEAT"}</div>
+          {gameResult(m.gameDuration)}
           <div className="game-time">{gameTime}</div>
         </div>
         <div className="player-loadout">
@@ -289,7 +308,7 @@ const toTimeAgo = (timestamp) => {
       <div
         ref={content}
         style={{ maxHeight: `${setHeight}` }}
-        className={`${props.playerWin ? "accordion-inner-win" : "accordion-inner-loss"}`}
+        className={`${accordionResult(m.gameDuration)}-inner`}
       >
         <div
           className="inner-content"
