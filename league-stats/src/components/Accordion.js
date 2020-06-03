@@ -19,12 +19,13 @@ function Accordion(props) {
   const [setActive, setActiveState] = useState("");
   const [setHeight, setHeightState] = useState("0px");
   const [setRotate, setRotateState] = useState("chevron");
-  const [gameModeData, setGameModeData] = useState([]);
-  const [playersNames, setPlayersNames] = useState([]);
-  const [playerSetup, setPlayerSetup] = useState([]);
-  const m = props.preview
 
-  console.log(m)
+  const [gameModeData, setGameModeData] = useState([]);
+  const [playerNameAndChamp, setPlayerNameAndChamp] = useState([]);
+  const [summonerSpells, setSummonerSpells] = useState([]);
+  const [keystone, setKeystone] = useState([]);
+
+  const m = props.preview
 
   const getGameModeData = async () => {
     const result = await axios(
@@ -33,7 +34,7 @@ function Accordion(props) {
     setGameModeData(result.data.find(mode => mode.queueId === m.queueId).description.slice(0, -6))
   }
 
-  const getPlayersNames = async () => {
+  const getPlayerNameAndChamp = async () => {
     const result = await axios(
       `http://ddragon.leagueoflegends.com/cdn/${props.patch}/data/en_US/champion.json`
     )
@@ -45,10 +46,10 @@ function Accordion(props) {
         <div className="player-names">{player.player.summonerName}</div>
       </div>
     })
-    setPlayersNames(playerChamps)
+    setPlayerNameAndChamp(playerChamps)
   }
 
-  const getPlayersSetup = async () => {
+  const getSummonerSpells = async () => {
     const champion = await axios(
       `http://ddragon.leagueoflegends.com/cdn/${props.patch}/data/en_US/champion.json`
     )
@@ -57,10 +58,10 @@ function Accordion(props) {
     const playerChamp = champs.find(champ => Number(champ.key) === player.championId)
 
     
-    const getSummonerSpells = await axios(
+    const getSpells = await axios(
       `http://ddragon.leagueoflegends.com/cdn/${props.patch}/data/en_US/summoner.json`
     )
-    const summonerSpells = Object.values(getSummonerSpells.data.data)
+    const summonerSpells = Object.values(getSpells.data.data)
     const spell1 = summonerSpells.find(spell => Number(spell.key) === player.spell1Id)
     const spell2 = summonerSpells.find(spell => Number(spell.key) === player.spell2Id)
     
@@ -75,15 +76,73 @@ function Accordion(props) {
                       </div>
                     </div>
 
-    setPlayerSetup(images)
+    setSummonerSpells(images)
   }
 
-  // console.log(currPlayerChamp)
+  const getKeystone = async () => {
+    const runes = await axios(
+      `http://ddragon.leagueoflegends.com/cdn/${props.patch}/data/en_US/runesReforged.json`
+    )
+    const player = m.participantsInfo.find(player => player.participantId === props.playerId)
+
+
+    // const secondaryTree = runes.data.find(rune => Number(rune.id) === player.stats.perkSubStyle)
+    // const secondarySlots = secondaryTree.slots.map(slot => {
+    //   return Object.values(slot)
+    // })
+    // const flattenSecondarySlots = [].concat.apply([], secondarySlots);
+    // const secondaryRunesList = [].concat.apply([],flattenSecondarySlots)
+
+
+    // const perk0 = primaryRunesList.find(rune => Number(rune.id) === player.stats.perk0)
+    // const perk1 = primaryRunesList.find(rune => Number(rune.id) === player.stats.perk1)
+    // const perk2 = primaryRunesList.find(rune => Number(rune.id) === player.stats.perk2)
+    // const perk3 = primaryRunesList.find(rune => Number(rune.id) === player.stats.perk3)
+    // const perk4 = secondaryRunesList.find(rune => Number(rune.id) === player.stats.perk4)
+    // const perk5 = secondaryRunesList.find(rune => Number(rune.id) === player.stats.perk5)
+    const slots = runes.data.map(runePath => {return runePath.slots})
+    const flattenSlots = [].concat.apply([], slots)
+    const subSlots = flattenSlots.map(subSlot => {return subSlot.runes})
+    const runesInfo = [].concat.apply([], subSlots)
+
+    // const perks = ["perk0", "perk1", "perk2", "perk3", "perk4", "perk5"]
+    // const getPerks = perks.map(perk => {
+    //   const perkData = runes.Info.find(rune => Number(rune.id) === player.stats.perk)
+    //   return perkData
+    // })
+
+    const perk0 = runesInfo.find(rune => Number(rune.id) === player.stats.perk0)
+    const perk1 = runesInfo.find(rune => Number(rune.id) === player.stats.perk1)
+    const perk2 = runesInfo.find(rune => Number(rune.id) === player.stats.perk2)
+    const perk3 = runesInfo.find(rune => Number(rune.id) === player.stats.perk3)
+    const perk4 = runesInfo.find(rune => Number(rune.id) === player.stats.perk4)
+    const perk5 = runesInfo.find(rune => Number(rune.id) === player.stats.perk5)
+
+    const perks = [perk1, perk2, perk3, perk4, perk5]
+
+    const getRuneImage = perks.map(perk => {
+      return <div className="rune-perk-container">
+        <img className="rune-perk" key={perk.id} alt="runes" src={`https://ddragon.leagueoflegends.com/cdn/img/${perk.icon}`} />
+      </div>
+    })
+
+    const getKeystoneImage = <div className="rune-perk-container">
+                              <img className="rune-perk" alt="runes" src={`https://ddragon.leagueoflegends.com/cdn/img/${perk0.icon}`} />
+                            </div>
+
+    const getSecondaryTreePath = runes.data.find(rune => Number(rune.id) === player.stats.perkSubStyle)
+    const getSecondaryTreePathImage = <div className="rune-perk-container">
+                                        <img className="rune-perk" alt="runes" src={`https://ddragon.leagueoflegends.com/cdn/img/${getSecondaryTreePath.icon}`} />
+                                      </div>
+
+    setKeystone([getRuneImage, getKeystoneImage, getSecondaryTreePathImage])
+  }
 
   useEffect((props, m) => {
     getGameModeData();
-    getPlayersNames();
-    getPlayersSetup();
+    getPlayerNameAndChamp();
+    getSummonerSpells();
+    getKeystone();
   }, [])
 
   const content = useRef(null);
@@ -119,7 +178,6 @@ function Accordion(props) {
   }
 
 const toTimeAgo = (timestamp) => {
-  console.log(timestamp)
   const timeAgo = Number(new Date()) - timestamp;
   const minute = 60000;
   const hour = minute * 60;
@@ -131,7 +189,6 @@ const toTimeAgo = (timestamp) => {
       const seconds = Math.round(timeAgo / 1000);
       return `${seconds} ${seconds > 1 ? 'seconds' : 'second'} ago`
     case timeAgo < hour:
-    console.log(timeAgo)
       const minutes = Math.round(timeAgo / minute);
       return  `${minutes} ${minutes > 1 ? 'minutes' : 'minute'} ago`
     case timeAgo < day:
@@ -158,21 +215,25 @@ const toTimeAgo = (timestamp) => {
   // }
 
   const gameTime = gameTimeConversion(m.gameDuration)
-  const firstTeam = playersNames.slice(0, 5)
-  const secondTeam = playersNames.slice(5, 10)
+  const firstTeam = playerNameAndChamp.slice(0, 5)
+  const secondTeam = playerNameAndChamp.slice(5, 10)
   const getTimeAgo = toTimeAgo(m.gameCreation)
 
   return (
     <div className="accordion-container">
       <button className={`${props.playerWin ? "accordion-win" : "accordion-loss"} ${setActive}`} onClick={toggleAccordion}>
         <div className="game-type">
-          <div>{convertGameMode(gameModeData)}</div>
-          {getTimeAgo}
-          {props.playerWin ? "VICTORY" : "DEFEAT"}
-          <div>{gameTime}</div>
+          <div className="game-mode">{convertGameMode(gameModeData)}</div>
+          <div className="time-ago">{getTimeAgo}</div>
+          <div className={props.playerWin ? "result-victory" : "result-defeat"}>{props.playerWin ? "VICTORY" : "DEFEAT"}</div>
+          <div className="game-time">{gameTime}</div>
         </div>
-        <div className="player-stats">
-          {playerSetup}
+        <div className="player-loadout">
+          {summonerSpells}
+          <div className="keystones">
+            {keystone[1]}
+            {keystone[2]}
+          </div>
         </div>
           <div className="objectives-container">
             <div className="objective">  
