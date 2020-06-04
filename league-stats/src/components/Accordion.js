@@ -27,6 +27,10 @@ function Accordion(props) {
 
   const m = props.preview
 
+  const player = m.participantsInfo.find(player => player.participantId === props.playerId)
+
+  const content = useRef(null);
+
   const getGameModeData = async () => {
     const result = await axios(
       "https://static.developer.riotgames.com/docs/lol/queues.json",
@@ -54,7 +58,6 @@ function Accordion(props) {
       `http://ddragon.leagueoflegends.com/cdn/${props.patch}/data/en_US/champion.json`
     )
     const champs = Object.values(champion.data.data)
-    const player = m.participantsInfo.find(player => player.participantId === props.playerId)
     const playerChamp = champs.find(champ => Number(champ.key) === player.championId)
 
     
@@ -83,33 +86,11 @@ function Accordion(props) {
     const runes = await axios(
       `http://ddragon.leagueoflegends.com/cdn/${props.patch}/data/en_US/runesReforged.json`
     )
-    const player = m.participantsInfo.find(player => player.participantId === props.playerId)
 
-
-    // const secondaryTree = runes.data.find(rune => Number(rune.id) === player.stats.perkSubStyle)
-    // const secondarySlots = secondaryTree.slots.map(slot => {
-    //   return Object.values(slot)
-    // })
-    // const flattenSecondarySlots = [].concat.apply([], secondarySlots);
-    // const secondaryRunesList = [].concat.apply([],flattenSecondarySlots)
-
-
-    // const perk0 = primaryRunesList.find(rune => Number(rune.id) === player.stats.perk0)
-    // const perk1 = primaryRunesList.find(rune => Number(rune.id) === player.stats.perk1)
-    // const perk2 = primaryRunesList.find(rune => Number(rune.id) === player.stats.perk2)
-    // const perk3 = primaryRunesList.find(rune => Number(rune.id) === player.stats.perk3)
-    // const perk4 = secondaryRunesList.find(rune => Number(rune.id) === player.stats.perk4)
-    // const perk5 = secondaryRunesList.find(rune => Number(rune.id) === player.stats.perk5)
     const slots = runes.data.map(runePath => {return runePath.slots})
     const flattenSlots = [].concat.apply([], slots)
     const subSlots = flattenSlots.map(subSlot => {return subSlot.runes})
     const runesInfo = [].concat.apply([], subSlots)
-
-    // const perks = ["perk0", "perk1", "perk2", "perk3", "perk4", "perk5"]
-    // const getPerks = perks.map(perk => {
-    //   const perkData = runes.Info.find(rune => Number(rune.id) === player.stats.perk)
-    //   return perkData
-    // })
 
     const perk0 = runesInfo.find(rune => Number(rune.id) === player.stats.perk0)
     const perk1 = runesInfo.find(rune => Number(rune.id) === player.stats.perk1)
@@ -137,7 +118,7 @@ function Accordion(props) {
 
     setKeystone([getRuneImage, getKeystoneImage, getSecondaryTreePathImage])
   }
-
+  
   useEffect((props, m) => {
     getGameModeData();
     getPlayerNameAndChamp();
@@ -145,7 +126,36 @@ function Accordion(props) {
     getKeystone();
   }, [])
 
-  const content = useRef(null);
+  function toTimeAgo(timestamp){
+    const timeAgo = Number(new Date()) - timestamp;
+    const minute = 60000;
+    const hour = minute * 60;
+    const day = hour * 24;
+    const month = day * 30;
+    const year = day * 365;
+    switch (true) {
+      case timeAgo < minute:
+        const seconds = Math.round(timeAgo / 1000);
+        return `${seconds} ${seconds > 1 ? 'seconds' : 'second'} ago`
+      case timeAgo < hour:
+        const minutes = Math.round(timeAgo / minute);
+        return  `${minutes} ${minutes > 1 ? 'minutes' : 'minute'} ago`
+      case timeAgo < day:
+        const hours = Math.round(timeAgo / hour);
+        return `${hours} ${hours > 1 ? 'hours' : 'hour'} ago`
+      case timeAgo < month:
+        const days = Math.round(timeAgo / day);
+        return `${days} ${days > 1 ? 'days' : 'day'} ago`
+      case timeAgo < year:
+        const months = Math.round(timeAgo / month);
+        return `${months} ${months > 1 ? 'months' : 'month'} ago`
+      case timeAgo > year:
+        const years = Math.round(timeAgo / year);
+        return `${years} ${years > 1 ? 'years' : 'year'} ago`
+      default:
+        return "";
+    }
+  };
 
   function toggleAccordion() {
     setActiveState(setActive === "" ? "active" : "");
@@ -176,36 +186,6 @@ function Accordion(props) {
     }
   }
 
-const toTimeAgo = (timestamp) => {
-  const timeAgo = Number(new Date()) - timestamp;
-  const minute = 60000;
-  const hour = minute * 60;
-  const day = hour * 24;
-  const month = day * 30;
-  const year = day * 365;
-  switch (true) {
-    case timeAgo < minute:
-      const seconds = Math.round(timeAgo / 1000);
-      return `${seconds} ${seconds > 1 ? 'seconds' : 'second'} ago`
-    case timeAgo < hour:
-      const minutes = Math.round(timeAgo / minute);
-      return  `${minutes} ${minutes > 1 ? 'minutes' : 'minute'} ago`
-    case timeAgo < day:
-      const hours = Math.round(timeAgo / hour);
-      return `${hours} ${hours > 1 ? 'hours' : 'hour'} ago`
-    case timeAgo < month:
-      const days = Math.round(timeAgo / day);
-      return `${days} ${days > 1 ? 'days' : 'day'} ago`
-    case timeAgo < year:
-      const months = Math.round(timeAgo / month);
-      return `${months} ${months > 1 ? 'months' : 'month'} ago`
-    case timeAgo > year:
-      const years = Math.round(timeAgo / year);
-      return `${years} ${years > 1 ? 'years' : 'year'} ago`
-    default:
-      return "";
-  }
-};
   // function getPlayerKda(){
   //   const getKda = m.participantsInfo.map(player => {
   //     return `${player.stats.kills}/${player.stats.deaths}/${player.stats.assists}`
@@ -233,6 +213,48 @@ const toTimeAgo = (timestamp) => {
     }
   }
 
+  const currPlayerStats = () => {
+    const stats = player.stats;
+    const kills = stats.kills;
+    const deaths = stats.deaths;
+    const assists = stats.assists;
+    const kdaRatio = ((stats.kills + stats.assists) / stats.deaths).toFixed(2);
+    const level = stats.champLevel;
+    const cs = stats.neutralMinionsKilled + stats.totalMinionsKilled;
+    // The + sign in front of the paranthesis is necessary or else values such as 1.5 will be rounded to 1.50 instead of 1.5
+    const cspm = +(cs / m.gameDuration * 60).toFixed(2);
+    const participantId = player.player.participantId;
+    const teamId = participantId < 6 ? 0 : 1;
+    let teamKills = 0;
+
+    if(teamId === 0 ){
+      m.participantsInfo.slice(0, 5).map(participant => {
+        return teamKills += participant.stats.kills
+      });
+    } else {
+      m.participantsInfo.slice(5, 10).map(participant => {
+        return teamKills += participant.stats.kills
+      });
+    };
+
+    let killsAssists = stats.kills + stats.assists;
+    let kp = Math.round(killsAssists * 100 / teamKills)
+    
+    return <div className="curr-player-stats">
+      <section className="curr-player-kda">
+        <p className="kda">
+          {kills} / <span className="deaths">{deaths}</span> / {assists}
+        </p>
+        <p>{kdaRatio} <span className="white-glow">KDA</span></p>
+      </section>
+      <section>
+        <p>Level {level}</p>
+        <p>{cs} <span className="white-glow">({cspm})</span> CS</p>
+        <p>{kp}% KP</p>
+      </section>
+    </div>
+  }
+
   const gameTime = gameTimeConversion(m.gameDuration)
   const firstTeam = playerNameAndChamp.slice(0, 5)
   const secondTeam = playerNameAndChamp.slice(5, 10)
@@ -253,6 +275,9 @@ const toTimeAgo = (timestamp) => {
             {keystone[1]}
             {keystone[2]}
           </div>
+        </div>
+        <div>
+          {currPlayerStats()}
         </div>
           <div className="objectives-container">
             <div className="objective">  
