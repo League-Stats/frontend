@@ -25,9 +25,9 @@ function Accordion(props) {
   const [summonerSpells, setSummonerSpells] = useState([]);
   const [keystone, setKeystone] = useState([]);
 
-  const m = props.preview
-
-  const player = m.participantsInfo.find(player => player.participantId === props.playerId)
+  const m = props.preview;
+  const player = m.participantsInfo.find(player => player.participantId === props.playerId);
+  const stats = player.stats;
 
   console.log(player)
 
@@ -216,7 +216,6 @@ function Accordion(props) {
   }
 
   const currPlayerStats = () => {
-    const stats = player.stats;
     const kills = stats.kills;
     const deaths = stats.deaths;
     const assists = stats.assists;
@@ -257,30 +256,6 @@ function Accordion(props) {
     </div>
   }
 
-  // const getItem = async (item) => {
-  //   const result = await axios(
-  //     `http://ddragon.leagueoflegends.com/cdn/${props.patch}/img/item/${item}.png`
-  //   );
-  //   console.log(result)
-  // }
-
-  // const currPlayerItems = () => {
-  //   const { item0 } = player.stats
-  //   const { item1 } = player.stats
-  //   const { item2 } = player.stats
-  //   const { item3 } = player.stats
-  //   const { item4 } = player.stats
-  //   const { item5 } = player.stats
-  //   const { item6 } = player.stats
-
-  //   const items = [item0, item1, item2, item3, item4, item5, item6]
-    
-  //   const fetchItems = items.map(item => {
-  //     return getItem(item)
-  //   })
-  //   console.log(fetchItems)
-  // }
-
   const currPlayerItems = () => {
     const { item0, item1, item2, item3, item4, item5, item6 } = player.stats
 
@@ -309,6 +284,15 @@ function Accordion(props) {
     </div>
   }
 
+  const currPlayerVision = () => {
+    const controlWards = stats.visionWardsBoughtInGame
+    const score = stats.visionScore
+    return <div className="curr-player-vision">
+      <p>Control Wards: {controlWards}</p>
+      <p>Vision Score: {score}</p>
+    </div>
+  }
+
   const gameTime = gameTimeConversion(m.gameDuration)
   const firstTeam = playerNameAndChamp.slice(0, 5)
   const secondTeam = playerNameAndChamp.slice(5, 10)
@@ -333,8 +317,9 @@ function Accordion(props) {
         <div>
           {currPlayerStats()}
         </div>
-        <div>
+        <div className="items-and-vision">
           {currPlayerItems()}
+          {currPlayerVision()}
         </div>
           <div className="objectives-container">
             <div className="objective">  
