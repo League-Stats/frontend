@@ -17,6 +17,8 @@ const Match = (props) => {
     <div>
       <Accordion
         preview={props.matchDetails}
+        gameId={props.matchGameId}
+        currentRegion={props.currentRegion}
         content={`${playerWinCheck ? "Win" : "Loss"}`}
         playerWin={playerWinCheck}
         patch={props.patch}

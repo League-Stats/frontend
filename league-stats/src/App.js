@@ -107,7 +107,6 @@ class App extends React.Component {
     })
   }
 
-
   regionChange = e => {
     this.setState({ current: e.target.value})
   }

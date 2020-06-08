@@ -21,15 +21,14 @@ function Accordion(props) {
   const [setRotate, setRotateState] = useState("chevron");
 
   const [gameModeData, setGameModeData] = useState([]);
-  const [playerNameAndChamp, setPlayerNameAndChamp] = useState([]);
+  const [playerNameAndChampSr, setPlayerNameAndChampSr] = useState([]);
+  const [playerNameAndChampOther, setPlayerNameAndChampOther] = useState([]);
   const [summonerSpells, setSummonerSpells] = useState([]);
   const [keystone, setKeystone] = useState([]);
 
   const m = props.preview;
   const player = m.participantsInfo.find(player => player.participantId === props.playerId);
   const stats = player.stats;
-
-  console.log(player)
 
   const content = useRef(null);
 
@@ -40,7 +39,55 @@ function Accordion(props) {
     setGameModeData(result.data.find(mode => mode.queueId === m.queueId).description.slice(0, -6))
   }
 
-  const getPlayerNameAndChamp = async () => {
+  const getPlayerNameAndChampSr = async () => {
+    const result = await axios(
+      `http://ddragon.leagueoflegends.com/cdn/${props.patch}/data/en_US/champion.json`
+    )
+    const roleOrder = await axios.request({
+      method: 'POST',
+      url: `https://hextechgg.herokuapp.com/api/summoner/matchandtimeline/`,
+      data: {
+        matchId: m.matchId,
+        summonerRegion: m.region
+      },
+    })
+    const champs = Object.values(result.data.data)
+    m.participantsInfo.map(player => {
+      player.timeline.lane = roleOrder.data[`${player.participantId}`]
+    })
+    const order = {
+      "top": 0,
+      "jungle": 1,
+      "mid": 2,
+      "bot": 3,
+      "supp": 4
+    }
+    const firstTeam = m.participantsInfo.slice(0, 5)
+    const sortFirstTeam = firstTeam.sort((a, b) => {
+      return (order[a.timeline.lane] - order[b.timeline.lane]) || a.timeline.name.localeCompare(b.timeline.lane)
+    })
+    const renderFirstTeam = sortFirstTeam.map(player => {
+      let champName = champs.find(champ => Number(champ.key) === player.championId).id
+      return <div className="player-pick" key={player.player.summonerName}>
+        <img className="champ-icon" alt="champion-icon" src={`http://ddragon.leagueoflegends.com/cdn/${props.patch}/img/champion/${champName}.png`}/>
+        <div className="player-names">{player.player.summonerName}</div>
+      </div>
+    })
+    const secondTeam = m.participantsInfo.slice(5, 10)
+    const sortSecondTeam = secondTeam.sort((a, b) => {
+      return (order[a.timeline.lane] - order[b.timeline.lane]) || a.timeline.name.localeCompare(b.timeline.lane)
+    })
+    const renderSecondTeam = sortSecondTeam.map(player => {
+      let champName = champs.find(champ => Number(champ.key) === player.championId).id
+      return <div className="player-pick" key={player.player.summonerName}>
+        <img className="champ-icon" alt="champion-icon" src={`http://ddragon.leagueoflegends.com/cdn/${props.patch}/img/champion/${champName}.png`}/>
+        <div className="player-names">{player.player.summonerName}</div>
+      </div>
+    })
+    setPlayerNameAndChampSr([renderFirstTeam, renderSecondTeam])
+  }
+
+  const getPlayerNameAndChampOther = async () => {
     const result = await axios(
       `http://ddragon.leagueoflegends.com/cdn/${props.patch}/data/en_US/champion.json`
     )
@@ -52,7 +99,7 @@ function Accordion(props) {
         <div className="player-names">{player.player.summonerName}</div>
       </div>
     })
-    setPlayerNameAndChamp(playerChamps)
+    setPlayerNameAndChampOther(playerChamps)
   }
 
   const getSummonerSpells = async () => {
@@ -123,7 +170,8 @@ function Accordion(props) {
   
   useEffect((props, m) => {
     getGameModeData();
-    getPlayerNameAndChamp();
+    getPlayerNameAndChampSr();
+    getPlayerNameAndChampOther();
     getSummonerSpells();
     getKeystone();
   }, [])
@@ -187,13 +235,6 @@ function Accordion(props) {
       return mode
     }
   }
-
-  // function getPlayerKda(){
-  //   const getKda = m.participantsInfo.map(player => {
-  //     return `${player.stats.kills}/${player.stats.deaths}/${player.stats.assists}`
-  //   })
-  //   return getKda
-  // }
 
   const gameResult = (time) => {
     if(time < 500){
@@ -294,8 +335,16 @@ function Accordion(props) {
   }
 
   const gameTime = gameTimeConversion(m.gameDuration)
-  const firstTeam = playerNameAndChamp.slice(0, 5)
-  const secondTeam = playerNameAndChamp.slice(5, 10)
+  const { queueId } = m
+  let firstTeam;
+  let secondTeam;
+  if(queueId === 420 || queueId === 430 || queueId === 400){
+    firstTeam = playerNameAndChampSr[0]
+    secondTeam = playerNameAndChampSr[1]
+  } else {
+    firstTeam = playerNameAndChampOther.slice(0, 5)
+    secondTeam = playerNameAndChampOther.slice(5, 10)
+  }
   const getTimeAgo = toTimeAgo(m.gameCreation)
 
   return (
@@ -367,9 +416,6 @@ function Accordion(props) {
               <p>{m.teams[1].towerKills}</p>
             </div>
           </div>
-          {/* <div>
-            {getPlayerKda()}
-          </div> */}
         <i className={`fas fa-chevron-right ${setRotate}`} />
       </button>
       <div

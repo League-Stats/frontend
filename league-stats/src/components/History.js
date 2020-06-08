@@ -8,13 +8,14 @@ class History extends React.Component {
         super(props)
         this.state = {
             matchDetails: [],
+            matchGameId: null
         }
     }
 
     // sort the game details by gameCreation
     async componentDidMount(){
         const matchPromises = this.props.history.slice(0, this.props.showGames).map(game => {
-            return axios.request({
+            const result = axios.request({
                 method: 'POST',
                 url: `https://hextechgg.herokuapp.com/api/summoner/matchdetails/`,
                 data: {
@@ -22,11 +23,11 @@ class History extends React.Component {
                     matchId: game.gameId
                 },
             })
+            return result
         })
 
         const matchDetails = await Promise.all(matchPromises);
         const sortDetails = matchDetails.sort((a, b) => b.data.gameCreation - a.data.gameCreation)
-
         this.setState({
             matchDetails: sortDetails
         })
@@ -38,6 +39,8 @@ class History extends React.Component {
                 {this.state.matchDetails.map(game => {
                     return <Match
                                 matchDetails={game.data}
+                                matchGameId={this.state.matchGameId}
+                                currentRegion={this.props.currentRegion}
                                 name={this.props.name}
                                 key={game.data.gameCreation}
                                 patch={this.props.patch}
