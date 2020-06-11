@@ -89,7 +89,9 @@ class App extends React.Component {
           </div>
           <div className="match-history">
             <Route path="/matchhistory/:region/:name">
-              <History />
+              <History
+                patch={this.state.patch}
+              />
             </Route>
           </div>
           <div className="rank-display">
