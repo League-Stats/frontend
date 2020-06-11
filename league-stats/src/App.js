@@ -2,6 +2,7 @@ import React from 'react';
 import '../src/components/sass/App.sass';
 import axios from 'axios';
 import { Route, Link } from 'react-router-dom';
+import { withRouter } from 'react-router';
 import Search from './components/Search';
 import Info from './components/Info';
 import History from './components/History';
@@ -21,7 +22,7 @@ class App extends React.Component {
       },
       rank: [],
       history: [],
-      showGames: 10,
+      showGames: 5,
       patch: "10.10.3208608",
       current: "NA",
       regions: [
@@ -41,68 +42,24 @@ class App extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
-
-    axios.request({
-      method: 'POST',
-      url: `https://hextechgg.herokuapp.com/api/summoner/summoner/`,
-      data: {
-        summonerName: this.state.value,
-        summonerRegion: this.state.current
-      },
-    })
-      .then(res => {
-        this.setState({
-          summoner: {
-            name: res.data.name,
-            icon: res.data.icon,
-            level: res.data.level
-          }
-        })
-      })
-      .catch(error => {
-        console.log(error)
-      })
-
-    axios.request({
-      method: 'POST',
-      url: `https://hextechgg.herokuapp.com/api/summoner/rank/`,
-      data: {
-        summonerName: this.state.value,
-	      summonerRegion: "NA"
-      },
-    })
-      .then(res => {
-        this.setState({
-          rank: res.data
-        })
-      })
-      .catch(error => {
-        console.log(error)
-      })
-
-    this.setState({ value: ''})
-
-    axios.request({
-      method: 'POST',
-      url: `https://hextechgg.herokuapp.com/api/summoner/matchhistory/`,
-      data: {
-        summonerName: this.state.value,
-        summonerRegion: this.state.current
-      },
-    })
-      .then(res => {
-        this.setState({
-          history: res.data
-        }) 
-      })
-      .catch(error => {
-        console.log(error)
-      })
+    this.props.history.push(`/profile/${this.state.current}/${this.state.value}`)
 
     axios.get('https://ddragon.leagueoflegends.com/api/versions.json')
     .then((res) => {
       this.setState({
         patch: res.data.shift()
+      })
+    })
+
+    axios.get(`https://hextechgg.herokuapp.com/api/summoner/profile/${this.state.current}/${this.state.value}`)
+    .then((res) => {
+      this.setState({
+        summoner: {
+          name: res.data.name,
+          icon: res.data.icon,
+          level: res.data.level,
+        },
+        rank: res.data.rank
       })
     })
   }
@@ -119,8 +76,8 @@ class App extends React.Component {
         </section>
         <section className="section-right">
           <div className="nav">
-            <Link to="/" className="nav-link">PROFILE</Link>
-            <Link to="/history" className="nav-link">MATCH HISTORY</Link>
+            <Link to={`/profile/${this.state.current}/${this.state.value}`} className="nav-link">PROFILE</Link>
+            <Link to={`/matchhistory/${this.state.current}/${this.state.value}`} className="nav-link">MATCH HISTORY</Link>
             <Search
               value={this.state.value}
               handleChanges={this.handleChanges}
@@ -131,19 +88,12 @@ class App extends React.Component {
             />
           </div>
           <div className="match-history">
-            <Route path={`/history/`}>
-              <History
-                name={this.state.summoner.name}
-                history={this.state.history}
-                showGames={this.state.showGames}
-                currentRegion={this.state.current}
-                patch={this.state.patch}
-                handleSubmit={this.handleSubmit}
-              />
+            <Route path="/matchhistory/:region/:name">
+              <History />
             </Route>
           </div>
           <div className="rank-display">
-            <Route exact path="/">
+            <Route path="/profile/:region/:name">
               <RankContainer rank={this.state.rank}/>
             </Route>
           </div>
@@ -153,4 +103,4 @@ class App extends React.Component {
   }
 }
 
-export default App;
+export default withRouter(App);
