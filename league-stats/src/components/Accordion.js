@@ -19,8 +19,10 @@ function Accordion(props) {
   const [setActive, setActiveState] = useState("");
   const [setHeight, setHeightState] = useState("0px");
   const [setRotate, setRotateState] = useState("chevron");
+
   const [summonerSpells, setSummonerSpells] = useState([]);
   const [keystone, setKeystone] = useState([]);
+  const [playerNameAndChamp, setPlayerNameAndChamp] = useState([]);
 
   const { details } = props.preview;
   console.log(details)
@@ -98,6 +100,7 @@ function Accordion(props) {
   useEffect((props, m) => {
     getSummonerSpells();
     getKeystone();
+    getPlayerNameAndChamp();
   }, [])
 
   function toTimeAgo(timestamp){
@@ -237,10 +240,25 @@ function Accordion(props) {
     </div>
   }
 
+  const getPlayerNameAndChamp = async () => {
+    const result = await axios(
+      `http://ddragon.leagueoflegends.com/cdn/${props.patch}/data/en_US/champion.json`
+    )
+    const champs = Object.values(result.data.data)
+    const playerChamps = details.participantsInfo.map(player => {
+      let champName = champs.find(champ => Number(champ.key) === player.championId).id
+      return <div className="player-pick" key={player.player.summonerName}>
+        <img className="champ-icon" alt="champion-icon" src={`http://ddragon.leagueoflegends.com/cdn/${props.patch}/img/champion/${champName}.png`}/>
+        <div className="player-names">{player.player.summonerName}</div>
+      </div>
+    })
+    setPlayerNameAndChamp(playerChamps)
+  }
+
   const getTimeAgo = toTimeAgo(details.gameCreation)
   
-  // const firstTeam = 
-  // const secondTeam = ;
+  let firstTeam = playerNameAndChamp.slice(0, 5)
+  let secondTeam = playerNameAndChamp.slice(5, 10)
 
   return (
     <div className="accordion-container">
@@ -287,8 +305,8 @@ function Accordion(props) {
               <p>{details.teams[0].towerKills}</p>
             </div>
           </div>
-        {/* <div className="teams">{firstTeam}</div>
-        <div className="teams">{secondTeam}</div> */}
+        <div className="teams">{firstTeam}</div>
+        <div className="teams">{secondTeam}</div>
           <div className="objectives-container">
             <div className="objective">  
               <img src={baron2} className="objectives-icon" alt="baron-icon"/>
