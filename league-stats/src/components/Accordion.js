@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import "../components/sass/Accordion.sass";
-import { baron1, baron2, dragon1, dragon2, herald1, herald2, inhib1, inhib2, tower1, tower2 } from '../images/objectives'
+import Objectives from './Objectives';
+// import { baron1, baron2, dragon1, dragon2, herald1, herald2, inhib1, inhib2, tower1, tower2 } from '../images/objectives'
 import {
   toTimeAgo,
   gameResult,
@@ -161,52 +162,10 @@ function Accordion(props) {
           {getCurrPlayerItems}
           {getCurrPlayerVision}
         </div>
-          <div className="objectives-container">
-            <div className="objective">  
-              <img src={baron1} className="objectives-icon" alt="baron"/>
-              <p>{details.teams[0].baronKills}</p>
-            </div>
-            <div className="objective">  
-              <img src={dragon1} className="objectives-icon" alt="dragon"/>
-              <p>{details.teams[0].dragonKills}</p>
-            </div>
-            <div className="objective">  
-              <img src={inhib1} className="objectives-icon" alt="inhib"/>
-              <p>{details.teams[0].inhibitorKills}</p>
-            </div>
-            <div className="objective">  
-              <img src={herald1} className="objectives-icon" alt="herald"/>
-              <p>{details.teams[0].riftHeraldKills}</p>
-            </div>
-            <div className="objective">  
-              <img src={tower1} className="objectives-icon" alt="tower"/>
-              <p>{details.teams[0].towerKills}</p>
-            </div>
-          </div>
+          <Objectives details={details} team={"blue"}/>
         <div className="teams">{firstTeam}</div>
         <div className="teams">{secondTeam}</div>
-          <div className="objectives-container">
-            <div className="objective">  
-              <img src={baron2} className="objectives-icon" alt="baron-icon"/>
-              <p>{details.teams[1].baronKills}</p>
-            </div>
-            <div className="objective">  
-              <img src={dragon2} className="objectives-icon" alt="dragon-icon"/>
-              <p>{details.teams[1].dragonKills}</p>
-            </div>
-            <div className="objective">  
-              <img src={inhib2} className="objectives-icon" alt="inhib-icon"/>
-              <p>{details.teams[1].inhibitorKills}</p>
-            </div>
-            <div className="objective">  
-              <img src={herald2} className="objectives-icon" alt="herald-icon"/>
-              <p>{details.teams[1].riftHeraldKills}</p>
-            </div>
-            <div className="objective">  
-              <img src={tower2} className="objectives-icon" alt="tower-icon"/>
-              <p>{details.teams[1].towerKills}</p>
-            </div>
-          </div>
+          <Objectives details={details} team={"red"}/>
         <i className={`fas fa-chevron-right ${setRotate}`} />
       </button>
       <div
