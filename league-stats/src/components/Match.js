@@ -1,6 +1,7 @@
 import React from 'react';
 import Accordion from './Accordion';
-import './sass/Match.sass'
+import InnerAccordion from './InnerAccordion';
+import './sass/Match.sass';
 
 const Match = (props) => {
   const getParticipantId = props.match.details.participantsInfo.find(player => player.player.summonerName === props.name).participantId

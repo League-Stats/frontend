@@ -1,19 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import {
-  baron1,
-  baron2,
-  dragon1,
-  dragon2,
-  herald1,
-  herald2,
-  inhib1,
-  inhib2,
-  tower1,
-  tower2,
-} from '../images/objectives'
-
 import "../components/sass/Accordion.sass";
+import { baron1, baron2, dragon1, dragon2, herald1, herald2, inhib1, inhib2, tower1, tower2 } from '../images/objectives'
+import {
+  toTimeAgo,
+  gameResult,
+  currPlayerStats,
+  currPlayerItems,
+  currPlayerVision
+} from './helper/index'
 
 function Accordion(props) {
   const [setActive, setActiveState] = useState("");
@@ -25,11 +20,28 @@ function Accordion(props) {
   const [playerNameAndChamp, setPlayerNameAndChamp] = useState([]);
 
   const { details } = props.preview;
-  console.log(details)
   const player = details.participantsInfo.find(player => player.participantId === props.playerId);
   const stats = player.stats;
 
   const content = useRef(null);
+
+  function toggleAccordion() {
+    setActiveState(setActive === "" ? "active" : "");
+    setHeightState(
+      setActive === "active" ? "0px" : `${content.current.scrollHeight}px`
+    );
+    setRotateState(setActive === "active" ? "chevron" : "chevron rotate");
+  }
+
+  function accordionResult(time){
+    if(time < 500){
+      return "accordion-remake"
+    } else if (props.playerWin){
+      return "accordion-win"
+    } else {
+      return "accordion-loss"
+    }
+  }
 
   const getSummonerSpells = async () => {
     const champion = await axios(
@@ -96,149 +108,6 @@ function Accordion(props) {
 
     setKeystone([getRuneImage, getKeystoneImage, getSecondaryTreePathImage])
   }
-  
-  useEffect((props, m) => {
-    getSummonerSpells();
-    getKeystone();
-    getPlayerNameAndChamp();
-  }, [])
-
-  function toTimeAgo(timestamp){
-    const timeAgo = Number(new Date()) - timestamp;
-    const minute = 60000;
-    const hour = minute * 60;
-    const day = hour * 24;
-    const month = day * 30;
-    const year = day * 365;
-    switch (true) {
-      case timeAgo < minute:
-        const seconds = Math.round(timeAgo / 1000);
-        return `${seconds} ${seconds > 1 ? 'seconds' : 'second'} ago`
-      case timeAgo < hour:
-        const minutes = Math.round(timeAgo / minute);
-        return  `${minutes} ${minutes > 1 ? 'minutes' : 'minute'} ago`
-      case timeAgo < day:
-        const hours = Math.round(timeAgo / hour);
-        return `${hours} ${hours > 1 ? 'hours' : 'hour'} ago`
-      case timeAgo < month:
-        const days = Math.round(timeAgo / day);
-        return `${days} ${days > 1 ? 'days' : 'day'} ago`
-      case timeAgo < year:
-        const months = Math.round(timeAgo / month);
-        return `${months} ${months > 1 ? 'months' : 'month'} ago`
-      case timeAgo > year:
-        const years = Math.round(timeAgo / year);
-        return `${years} ${years > 1 ? 'years' : 'year'} ago`
-      default:
-        return "";
-    }
-  };
-
-  function toggleAccordion() {
-    setActiveState(setActive === "" ? "active" : "");
-    setHeightState(
-      setActive === "active" ? "0px" : `${content.current.scrollHeight}px`
-    );
-    setRotateState(setActive === "active" ? "chevron" : "chevron rotate");
-  }
-
-  const gameResult = (time) => {
-    if(time < 500){
-      return <div className={"result-remake"}>REMAKE</div>
-    } else if(props.playerWin === true){
-      return <div className={"result-victory"}>VICTORY</div>
-    } else {
-      return <div className={"result-defeat"}>DEFEAT</div>
-    }
-  }
-
-  const accordionResult = (time) => {
-    if(time < 500){
-      return "accordion-remake"
-    } else if (props.playerWin){
-      return "accordion-win"
-    } else {
-      return "accordion-loss"
-    }
-  }
-
-  const currPlayerStats = () => {
-    const kills = stats.kills;
-    const deaths = stats.deaths;
-    const assists = stats.assists;
-    const kdaRatio = ((stats.kills + stats.assists) / stats.deaths).toFixed(2);
-    const level = stats.champLevel;
-    const cs = stats.neutralMinionsKilled + stats.totalMinionsKilled;
-    // The + sign in front of the paranthesis is necessary or else values such as 1.5 will be rounded to 1.50 instead of 1.5
-    const cspm = +(cs / details.gameDuration * 60).toFixed(2);
-    const participantId = player.player.participantId;
-    const teamId = participantId < 6 ? 0 : 1;
-    let teamKills = 0;
-
-    if(teamId === 0 ){
-      details.participantsInfo.slice(0, 5).map(participant => {
-        return teamKills += participant.stats.kills
-      });
-    } else {
-      details.participantsInfo.slice(5, 10).map(participant => {
-        return teamKills += participant.stats.kills
-      });
-    };
-
-    let killsAssists = stats.kills + stats.assists;
-    let kp = Math.round(killsAssists * 100 / teamKills)
-    
-    return <div className="curr-player-stats">
-      <section className="curr-player-kda">
-        <p className="kda">
-          {kills} / <span className="deaths">{deaths}</span> / {assists}
-        </p>
-        <p>{kdaRatio} <span className="white-glow">KDA</span></p>
-      </section>
-      <section>
-        <p>Level {level}</p>
-        <p>{cs} <span className="white-glow">({cspm})</span> CS</p>
-        <p>{kp}% KP</p>
-      </section>
-    </div>
-  }
-
-  const currPlayerItems = () => {
-    const { item0, item1, item2, item3, item4, item5, item6 } = player.stats
-
-    const img0 = item0 === 0 ? <div className="no-item"></div> : <img className="curr-player-item" alt="player item" src={`http://ddragon.leagueoflegends.com/cdn/${props.patch}/img/item/${item0}.png`}/>
-    const img1 = item1 === 0 ? <div className="no-item"></div> : <img className="curr-player-item" alt="player item" src={`http://ddragon.leagueoflegends.com/cdn/${props.patch}/img/item/${item1}.png`}/>
-    const img2 = item2 === 0 ? <div className="no-item"></div> : <img className="curr-player-item" alt="player item" src={`http://ddragon.leagueoflegends.com/cdn/${props.patch}/img/item/${item2}.png`}/>
-    const img3 = item3 === 0 ? <div className="no-item"></div> : <img className="curr-player-item" alt="player item" src={`http://ddragon.leagueoflegends.com/cdn/${props.patch}/img/item/${item3}.png`}/>
-    const img4 = item4 === 0 ? <div className="no-item"></div> : <img className="curr-player-item" alt="player item" src={`http://ddragon.leagueoflegends.com/cdn/${props.patch}/img/item/${item4}.png`}/>
-    const img5 = item5 === 0 ? <div className="no-item"></div> : <img className="curr-player-item" alt="player item" src={`http://ddragon.leagueoflegends.com/cdn/${props.patch}/img/item/${item5}.png`}/>
-    const img6 = item6 === 0 ? <div className="no-item"></div> : <img className="curr-player-item" alt="player item" src={`http://ddragon.leagueoflegends.com/cdn/${props.patch}/img/item/${item6}.png`}/>
-    
-    return <div className="curr-player-items">
-      <section>
-        <div className="curr-player-items-row-1">
-          {img0}
-          {img1}
-          {img2}
-        </div>
-        <div className="curr-player-items-row-2">
-          {img3}
-          {img4}
-          {img5}
-        </div>
-      </section>
-      {img6}
-    </div>
-  }
-
-  const currPlayerVision = () => {
-    const controlWards = stats.visionWardsBoughtInGame
-    const score = stats.visionScore
-    return <div className="curr-player-vision">
-      <p>Control Wards: {controlWards}</p>
-      <p>Vision Score: {score}</p>
-    </div>
-  }
 
   const getPlayerNameAndChamp = async () => {
     const result = await axios(
@@ -254,19 +123,28 @@ function Accordion(props) {
     })
     setPlayerNameAndChamp(playerChamps)
   }
-
-  const getTimeAgo = toTimeAgo(details.gameCreation)
   
-  let firstTeam = playerNameAndChamp.slice(0, 5)
-  let secondTeam = playerNameAndChamp.slice(5, 10)
+  useEffect((props, m) => {
+    getSummonerSpells();
+    getKeystone();
+    getPlayerNameAndChamp();
+  }, [])
 
+  const getTimeAgo = toTimeAgo(details.gameCreation);
+  const getGameResult = gameResult(props, details.gameDuration);
+  const getCurrPlayerStats = currPlayerStats(stats, details, player);
+  const getCurrPlayerItems = currPlayerItems(player, props);
+  const getCurrPlayerVision = currPlayerVision(stats);
+  
+  let firstTeam = playerNameAndChamp.slice(0, 5);
+  let secondTeam = playerNameAndChamp.slice(5, 10);
   return (
     <div className="accordion-container">
       <button className={`${accordionResult(details.gameDuration)} ${setActive}`} onClick={toggleAccordion}>
         <div className="game-type">
           <div className="game-mode">{details.queueIdConverted}</div>
           <div className="time-ago">{getTimeAgo}</div>
-          {gameResult(details.gameDuration)}
+          {getGameResult}
           <div className="game-time">{details.gameDurationConverted}</div>
         </div>
         <div className="player-loadout">
@@ -277,11 +155,11 @@ function Accordion(props) {
           </div>
         </div>
         <div>
-          {currPlayerStats()}
+          {getCurrPlayerStats}
         </div>
         <div className="items-and-vision">
-          {currPlayerItems()}
-          {currPlayerVision()}
+          {getCurrPlayerItems}
+          {getCurrPlayerVision}
         </div>
           <div className="objectives-container">
             <div className="objective">  

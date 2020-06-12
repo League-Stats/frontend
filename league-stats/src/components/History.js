@@ -12,27 +12,6 @@ class History extends React.Component {
             history: []
         }
     }
-
-    // sort the game details by gameCreation
-    // async componentDidMount(){
-    //     const matchPromises = this.props.history.slice(0, this.props.showGames).map(game => {
-    //         const result = axios.request({
-    //             method: 'POST',
-    //             url: `https://hextechgg.herokuapp.com/api/summoner/matchdetails/`,
-    //             data: {
-    //                 summonerRegion: this.props.currentRegion,
-    //                 matchId: game.gameId
-    //             },
-    //         })
-    //         return result
-    //     })
-
-    //     const matchDetails = await Promise.all(matchPromises);
-    //     const sortDetails = matchDetails.sort((a, b) => b.data.gameCreation - a.data.gameCreation)
-    //     this.setState({
-    //         matchDetails: sortDetails
-    //     })
-    // }
     
     getHistory = async () => {
         const { name, region } = this.props.match.params;
@@ -73,16 +52,6 @@ class History extends React.Component {
                                 patch={this.props.patch}
                                 key={match.details.matchId} />
                 })}
-                {/* {this.state.matchDetails.map(game => {
-                    return <Match
-                                matchDetails={game.data}
-                                matchGameId={this.state.matchGameId}
-                                currentRegion={this.props.currentRegion}
-                                name={this.props.name}
-                                key={game.data.gameCreation}
-                                patch={this.props.patch}
-                            />
-                })} */}
             </div>
         )
     }
