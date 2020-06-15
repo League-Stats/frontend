@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import "../components/sass/Accordion.sass";
 import Objectives from './Objectives';
-// import { baron1, baron2, dragon1, dragon2, herald1, herald2, inhib1, inhib2, tower1, tower2 } from '../images/objectives'
+import AccordionInner from './AccordionInner';
 import {
   toTimeAgo,
   gameResult,
@@ -173,10 +173,9 @@ function Accordion(props) {
         style={{ maxHeight: `${setHeight}` }}
         className={`${accordionResult(details.gameDuration)}-inner`}
       >
-        <div
-          className="inner-content"
-          dangerouslySetInnerHTML={{ __html: props.content }}
-        />
+        <div className="inner-content">
+          <AccordionInner />
+        </div>
       </div>
     </div>
   );

@@ -1,6 +1,5 @@
 import React from 'react';
 import Accordion from './Accordion';
-import InnerAccordion from './InnerAccordion';
 import './sass/Match.sass';
 
 const Match = (props) => {
@@ -19,7 +18,7 @@ const Match = (props) => {
       <Accordion
         patch={props.patch}
         preview={props.match}
-        content={`${playerWinCheck ? "Win" : "Loss"}`}
+        content={'test'}
         playerWin={playerWinCheck}
         playerId={getParticipantId}
       />
