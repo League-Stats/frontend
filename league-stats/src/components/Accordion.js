@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
 import "../components/sass/Accordion.sass";
 import Objectives from './Objectives';
 import AccordionInner from './AccordionInner';
@@ -23,6 +22,7 @@ function Accordion(props) {
   const { details } = props.preview;
   const player = details.participantsInfo.find(player => player.participantId === props.playerId);
   const stats = player.stats;
+  const { champions, spells, runes } = props;
 
   const content = useRef(null);
 
@@ -45,19 +45,9 @@ function Accordion(props) {
   }
 
   const getSummonerSpells = async () => {
-    const champion = await axios(
-      `http://ddragon.leagueoflegends.com/cdn/${props.patch}/data/en_US/champion.json`
-    )
-    const champs = Object.values(champion.data.data)
-    const playerChamp = champs.find(champ => Number(champ.key) === player.championId)
-
-    
-    const getSpells = await axios(
-      `http://ddragon.leagueoflegends.com/cdn/${props.patch}/data/en_US/summoner.json`
-    )
-    const summonerSpells = Object.values(getSpells.data.data)
-    const spell1 = summonerSpells.find(spell => Number(spell.key) === player.spell1Id)
-    const spell2 = summonerSpells.find(spell => Number(spell.key) === player.spell2Id)
+    const playerChamp = champions.find(champ => Number(champ.key) === player.championId)
+    const spell1 = spells.find(spell => Number(spell.key) === player.spell1Id)
+    const spell2 = spells.find(spell => Number(spell.key) === player.spell2Id)
     
     const images =  <div className="curr-setup-container">
                       <p className="curr-player-champ-name"> {playerChamp.name}</p>
@@ -74,11 +64,7 @@ function Accordion(props) {
   }
 
   const getKeystone = async () => {
-    const runes = await axios(
-      `http://ddragon.leagueoflegends.com/cdn/${props.patch}/data/en_US/runesReforged.json`
-    )
-
-    const slots = runes.data.map(runePath => {return runePath.slots})
+    const slots = runes.map(runePath => {return runePath.slots})
     const flattenSlots = [].concat.apply([], slots)
     const subSlots = flattenSlots.map(subSlot => {return subSlot.runes})
     const runesInfo = [].concat.apply([], subSlots)
@@ -102,7 +88,7 @@ function Accordion(props) {
                               <img className="rune-perk" alt="runes" src={`https://ddragon.leagueoflegends.com/cdn/img/${perk0.icon}`} />
                             </div>
 
-    const getSecondaryTreePath = runes.data.find(rune => Number(rune.id) === player.stats.perkSubStyle)
+    const getSecondaryTreePath = runes.find(rune => Number(rune.id) === player.stats.perkSubStyle)
     const getSecondaryTreePathImage = <div className="rune-perk-container">
                                         <img className="rune-perk" alt="runes" src={`https://ddragon.leagueoflegends.com/cdn/img/${getSecondaryTreePath.icon}`} />
                                       </div>
@@ -111,12 +97,8 @@ function Accordion(props) {
   }
 
   const getPlayerNameAndChamp = async () => {
-    const result = await axios(
-      `http://ddragon.leagueoflegends.com/cdn/${props.patch}/data/en_US/champion.json`
-    )
-    const champs = Object.values(result.data.data)
     const playerChamps = details.participantsInfo.map(player => {
-      let champName = champs.find(champ => Number(champ.key) === player.championId).id
+      let champName = champions.find(champ => Number(champ.key) === player.championId).id
       return <div className="player-pick" key={player.player.summonerName}>
         <img className="champ-icon" alt="champion-icon" src={`http://ddragon.leagueoflegends.com/cdn/${props.patch}/img/champion/${champName}.png`}/>
         <div className="player-names">{player.player.summonerName}</div>
@@ -174,7 +156,11 @@ function Accordion(props) {
         className={`${accordionResult(details.gameDuration)}-inner`}
       >
         <div className="inner-content">
-          <AccordionInner />
+          <AccordionInner
+            details={details}
+            patch={props.patch}
+            champions={props.champions}
+          />
         </div>
       </div>
     </div>

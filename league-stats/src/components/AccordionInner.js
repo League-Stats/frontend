@@ -40,16 +40,20 @@ const AccordionInner = props => {
 
       <>
         <AccordionTab tabID={1} isActive={checkIfCurrent(1)}>
-          <AccordionPlayers />
+          <AccordionPlayers
+            details={props.details}
+            patch={props.patch}
+            champions={props.champions}
+          />
         </AccordionTab>
         <AccordionTab tabID={2} isActive={checkIfCurrent(2)}>
-          <AccordionAnalysis />
+          <AccordionAnalysis details={props.details} />
         </AccordionTab>
         <AccordionTab tabID={3} isActive={checkIfCurrent(3)}>
-          <AccordionLoadout />
+          <AccordionLoadout details={props.details} />
         </AccordionTab>
         <AccordionTab tabID={3} isActive={checkIfCurrent(4)}>
-          <AccordionExtra />
+          <AccordionExtra details={props.details} />
         </AccordionTab>
       </>
     </section>

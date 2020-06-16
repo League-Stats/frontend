@@ -21,6 +21,9 @@ const Match = (props) => {
         content={'test'}
         playerWin={playerWinCheck}
         playerId={getParticipantId}
+        champions={props.champions}
+        spells={props.spells}
+        runes={props.runes}
       />
     </div>
   )

@@ -50,7 +50,11 @@ class History extends React.Component {
                                 match={match}
                                 name={this.state.name}
                                 patch={this.props.patch}
-                                key={match.details.matchId} />
+                                key={match.details.matchId}
+                                champions={this.props.champions}
+                                spells={this.props.spells}
+                                runes={this.props.runes}
+                            />
                 })}
             </div>
         )

@@ -35,7 +35,31 @@ class App extends React.Component {
           { id: 6, locale: 'LAN' },
           { id: 7, locale: 'LAS' }
       ],
+      champions: [],
+      spells: [],
+      runes: [],
     }
+  }
+
+  async componentDidMount(){
+    const getPatch = await axios.get('https://ddragon.leagueoflegends.com/api/versions.json')
+    const patch = getPatch.data.shift()
+
+    const getChampions = await axios(`http://ddragon.leagueoflegends.com/cdn/${patch}/data/en_US/champion.json`)
+    const champions = Object.values(getChampions.data.data)
+
+    const getSpells = await axios(`http://ddragon.leagueoflegends.com/cdn/${patch}/data/en_US/summoner.json`)
+    const spells = Object.values(getSpells.data.data)
+
+    const getRunes = await axios(`http://ddragon.leagueoflegends.com/cdn/${patch}/data/en_US/runesReforged.json`)
+    const runes = getRunes.data
+
+    this.setState({
+      patch,
+      champions,
+      spells,
+      runes
+    })
   }
 
   handleChanges = e => this.setState({ value: e.target.value });
@@ -43,13 +67,6 @@ class App extends React.Component {
   handleSubmit = e => {
     e.preventDefault();
     this.props.history.push(`/profile/${this.state.current}/${this.state.value}`)
-
-    axios.get('https://ddragon.leagueoflegends.com/api/versions.json')
-    .then((res) => {
-      this.setState({
-        patch: res.data.shift()
-      })
-    })
 
     axios.get(`https://hextechgg.herokuapp.com/api/summoner/profile/${this.state.current}/${this.state.value}`)
     .then((res) => {
@@ -91,6 +108,9 @@ class App extends React.Component {
             <Route path="/matchhistory/:region/:name">
               <History
                 patch={this.state.patch}
+                champions={this.state.champions}
+                spells={this.state.spells}
+                runes={this.state.runes}
               />
             </Route>
           </div>
