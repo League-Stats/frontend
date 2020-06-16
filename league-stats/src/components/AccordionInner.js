@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import AccordionTab from "./AccordionTab";
 import AccordionPlayers from './AccordionPlayers';
-import AccordionAnalysis from './AccordionAnalysis';
+// import AccordionAnalysis from './AccordionAnalysis';
 import AccordionLoadout from './AccordionLoadout';
-import AccordionExtra from './AccordionExtra';
+// import AccordionExtra from './AccordionExtra';
 
 const AccordionInner = props => {
   const [currentTab, setCurrentTab] = useState(1);
@@ -18,24 +18,24 @@ const AccordionInner = props => {
             >
                 Players
             </button>
-            <button
+            {/* <button
                 className={checkIfCurrent(2) ? "tab-button buttonActive" : "tab-button"}
                 onClick={() => setCurrentTab(2)}
             >
                 Analysis
-            </button>
+            </button> */}
             <button
                 className={checkIfCurrent(3) ? "tab-button buttonActive" : "tab-button"}
                 onClick={() => setCurrentTab(3)}
             >
                 Loadout
             </button>
-            <button
+            {/* <button
                 className={checkIfCurrent(4) ? "tab-button buttonActive" : "tab-button"}
                 onClick={() => setCurrentTab(4)}
             >
                 Extra
-            </button>
+            </button> */}
         </div>
 
       <>
@@ -46,15 +46,15 @@ const AccordionInner = props => {
             champions={props.champions}
           />
         </AccordionTab>
-        <AccordionTab tabID={2} isActive={checkIfCurrent(2)}>
+        {/* <AccordionTab tabID={2} isActive={checkIfCurrent(2)}>
           <AccordionAnalysis details={props.details} />
-        </AccordionTab>
+        </AccordionTab> */}
         <AccordionTab tabID={3} isActive={checkIfCurrent(3)}>
           <AccordionLoadout details={props.details} />
         </AccordionTab>
-        <AccordionTab tabID={3} isActive={checkIfCurrent(4)}>
+        {/* <AccordionTab tabID={3} isActive={checkIfCurrent(4)}>
           <AccordionExtra details={props.details} />
-        </AccordionTab>
+        </AccordionTab> */}
       </>
     </section>
   );
