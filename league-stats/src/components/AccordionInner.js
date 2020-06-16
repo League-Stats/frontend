@@ -44,6 +44,9 @@ const AccordionInner = props => {
             details={props.details}
             patch={props.patch}
             champions={props.champions}
+            spells={props.spells}
+            runes={props.runes}
+            player={props.player}
           />
         </AccordionTab>
         {/* <AccordionTab tabID={2} isActive={checkIfCurrent(2)}>

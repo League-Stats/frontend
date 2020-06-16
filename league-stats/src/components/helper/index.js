@@ -3,7 +3,8 @@ import { gameResult } from './GameResult';
 import { currPlayerStats } from './CurrPlayerStats';
 import { currPlayerItems } from './CurrPlayerItems';
 import { currPlayerVision } from './CurrPlayerVision';
-import { displayPlayers } from './DisplayPlayers';
+import { teamsPicks } from './TeamsPicks';
+import { getRunes } from './GetRunes';
 
 export {
     toTimeAgo,
@@ -11,5 +12,6 @@ export {
     currPlayerStats,
     currPlayerItems,
     currPlayerVision,
-    displayPlayers
+    teamsPicks,
+    getRunes
 }
