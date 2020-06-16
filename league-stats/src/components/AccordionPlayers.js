@@ -1,6 +1,8 @@
 import React from 'react';
+import './sass/AccordionTabs.sass'
 import {
-    teamsPicks
+    teamsPicks,
+    nameAndStats
 } from './helper/index'
 
 const AccordionPlayers = (props) => {
@@ -9,11 +11,20 @@ const AccordionPlayers = (props) => {
     const secondTeam = details.participantsInfo.slice(5, 10)
     const showFirstTeam = teamsPicks(firstTeam, props)
     const showSecondTeam = teamsPicks(secondTeam, props)
+    const FirstTeamNameAndStats = nameAndStats(firstTeam, props)
+    const SecondTeamNameAndStats = nameAndStats(secondTeam, props)
+
     return(
         <div>
-            {showFirstTeam}
+            <section className="players-section">
+                {showFirstTeam}
+                {FirstTeamNameAndStats}
+            </section>
             -------------------------------------------------------------------------------------------------------------------
-            {showSecondTeam}
+            <section className="players-section">
+                {showSecondTeam}
+                {SecondTeamNameAndStats}
+            </section>
         </div>
     )
 }
