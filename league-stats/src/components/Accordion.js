@@ -162,6 +162,7 @@ function Accordion(props) {
             spells={props.spells}
             runes={props.runes}
             player={player}
+            region={props.region}
           />
         </div>
       </div>

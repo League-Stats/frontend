@@ -111,6 +111,7 @@ class App extends React.Component {
                 champions={this.state.champions}
                 spells={this.state.spells}
                 runes={this.state.runes}
+                region={this.state.current}
               />
             </Route>
           </div>

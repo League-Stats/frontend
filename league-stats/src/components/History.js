@@ -54,6 +54,7 @@ class History extends React.Component {
                                 champions={this.props.champions}
                                 spells={this.props.spells}
                                 runes={this.props.runes}
+                                region={this.props.region}
                             />
                 })}
             </div>

@@ -8,7 +8,6 @@ export function teamsPicks(team, props){
     return(
         <div>
             {team.map(player => {
-                // const { stats } = player
                 let champName = champions.find(champ => Number(champ.key) === player.championId).id
                 const spell1 = spells.find(spell => Number(spell.key) === player.spell1Id).id
                 const spell2 = spells.find(spell => Number(spell.key) === player.spell2Id).id
@@ -31,8 +30,6 @@ export function teamsPicks(team, props){
                                 <img className="mini-rune-perk" alt="runes" src={`https://ddragon.leagueoflegends.com/cdn/img/${secondaryTree.icon}`} />
                             </div>
                         </div>
-                        {/* <p>{player.player.summonerName}</p>
-                        <p>{stats.kills}/{stats.deaths}/{stats.assists}</p> */}
                     </div>
                 )
             })}

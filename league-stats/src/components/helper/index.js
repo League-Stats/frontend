@@ -6,6 +6,7 @@ import { currPlayerVision } from './CurrPlayerVision';
 import { teamsPicks } from './TeamsPicks';
 import { getRunes } from './GetRunes';
 import { nameAndStats } from './NameAndStats.js';
+import { items } from './Items.js'
 
 export {
     toTimeAgo,
@@ -15,5 +16,6 @@ export {
     currPlayerVision,
     teamsPicks,
     getRunes,
-    nameAndStats
+    nameAndStats,
+    items
 }

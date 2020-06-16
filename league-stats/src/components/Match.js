@@ -24,6 +24,7 @@ const Match = (props) => {
         champions={props.champions}
         spells={props.spells}
         runes={props.runes}
+        region={props.region}
       />
     </div>
   )

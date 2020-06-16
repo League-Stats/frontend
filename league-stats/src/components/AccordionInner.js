@@ -47,13 +47,18 @@ const AccordionInner = props => {
             spells={props.spells}
             runes={props.runes}
             player={props.player}
+            region={props.region}
           />
         </AccordionTab>
         {/* <AccordionTab tabID={2} isActive={checkIfCurrent(2)}>
           <AccordionAnalysis details={props.details} />
         </AccordionTab> */}
         <AccordionTab tabID={3} isActive={checkIfCurrent(3)}>
-          <AccordionLoadout details={props.details} />
+          <AccordionLoadout
+          runes={props.runes}
+            details={props.details}
+            player={props.player}
+          />
         </AccordionTab>
         {/* <AccordionTab tabID={3} isActive={checkIfCurrent(4)}>
           <AccordionExtra details={props.details} />
