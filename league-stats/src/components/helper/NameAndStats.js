@@ -5,7 +5,8 @@ export function nameAndStats(team, props){
         <div>
             {team.map(player => {
                 const { stats } = player
-                const kdaRatio = ((stats.kills + stats.assists) / stats.deaths).toFixed(2);
+                const getKdaRatio = ((stats.kills + stats.assists) / stats.deaths).toFixed(2);
+                const kdaRatio = getKdaRatio === "Infinity" ? "Clean" : getKdaRatio
                 const cs = stats.neutralMinionsKilled + stats.totalMinionsKilled;
                 const cspm = +(cs / props.details.gameDuration * 60).toFixed(2);
 

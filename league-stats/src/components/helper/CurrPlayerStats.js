@@ -2,7 +2,8 @@ import React from 'react';
 
 export function currPlayerStats(stats, details, player){
     const { kills, deaths, assists } = stats;
-    const kdaRatio = ((kills + assists) / deaths).toFixed(2);
+    const getKdaRatio = ((kills + assists) / deaths).toFixed(2);
+    const kdaRatio = getKdaRatio === "Infinity" ? "Clean" : getKdaRatio
     const level = stats.champLevel;
     const cs = stats.neutralMinionsKilled + stats.totalMinionsKilled;
     // The + sign in front of the paranthesis is necessary or else values such as 1.5 will be rounded to 1.50 instead of 1.5
